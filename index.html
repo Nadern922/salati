@@ -57,7 +57,7 @@
       var(--night);
     color:var(--cream);
     min-height:100%;
-    padding-bottom:90px;
+    padding-bottom:calc(90px + env(safe-area-inset-bottom));
     padding-top:env(safe-area-inset-top);
     transition:background-color .3s ease, color .3s ease;
   }
