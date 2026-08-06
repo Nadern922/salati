@@ -1585,6 +1585,13 @@
 
   /* ============ آية اليوم / حديث اليوم ============ */
   .home-mini-card{padding:16px; margin-bottom:12px;}
+  .home-mini-card:last-of-type{margin-bottom:28px;}
+  .scroll-hint-fade{
+    position:fixed; left:0; right:0; bottom:calc(64px + env(safe-area-inset-bottom)); height:36px;
+    background:linear-gradient(180deg, transparent, var(--night) 85%);
+    pointer-events:none; z-index:5; opacity:0; transition:opacity .25s ease;
+  }
+  .scroll-hint-fade.show{opacity:1;}
   .hmc-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;}
   .hmc-title{font-weight:800; color:var(--gold-soft); font-size:0.9rem;}
   .hmc-icon{
@@ -1845,6 +1852,8 @@
 </div>
 
 <!-- BOTTOM NAV -->
+<div class="scroll-hint-fade" id="scrollHintFade"></div>
+
 <nav class="bottom-nav">
   <button class="nav-item" id="navQuran">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -5974,6 +5983,19 @@ function renderHomeStats(){
 renderHomeStats();
 const hscMoreBtnEl = document.getElementById('hscMoreBtn');
 if(hscMoreBtnEl) hscMoreBtnEl.addEventListener('click', () => { if(typeof openStatsOverlay === 'function') openStatsOverlay(); });
+
+/* ============ تلميح بصري لوجود محتوى إضافي أسفل الصفحة الرئيسية ============ */
+const scrollHintFadeEl = document.getElementById('scrollHintFade');
+function updateScrollHint(){
+  if(!scrollHintFadeEl) return;
+  const nearBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 30);
+  const pageScrollable = document.documentElement.scrollHeight > window.innerHeight + 30;
+  scrollHintFadeEl.classList.toggle('show', pageScrollable && !nearBottom);
+}
+window.addEventListener('scroll', updateScrollHint, {passive:true});
+window.addEventListener('resize', updateScrollHint);
+setTimeout(updateScrollHint, 400);
+setTimeout(updateScrollHint, 1200);
 
 const duaTextEl = document.getElementById('duaOfDay');
 const duaPrevBtn = document.getElementById('duaPrevBtn');
