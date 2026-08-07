@@ -4331,11 +4331,18 @@ function loadSurah(index, autoplay){
   qpAyahCount.textContent = SURAH_AYAHS[index] + " آيات";
   playerInner.classList.add('show');
   isAudioLoading = true;
+  loadingStartedAt = Date.now();
   renderSurahList(searchBox.value.trim());
   updateFavBtn();
   setCurLoadingState('loading');
   if(autoplay){
-    audio.play().then(()=>{ isPlaying = true; updatePlayIcon(); }).catch(()=>{});
+    audio.play().then(()=>{ isPlaying = true; updatePlayIcon(); }).catch(()=>{
+      isPlaying = false;
+      updatePlayIcon();
+      isAudioLoading = false;
+      renderSurahList(searchBox.value.trim());
+      setCurLoadingState('paused');
+    });
   }
 }
 
@@ -4349,7 +4356,7 @@ function updatePlayIcon(){
 playBtn.addEventListener('click', () => {
   if(currentIndex === null){ loadSurah(0, true); return; }
   if(isPlaying){ audio.pause(); isPlaying=false; }
-  else { audio.play(); isPlaying=true; }
+  else { audio.play().catch(()=>{}); isPlaying=true; }
   updatePlayIcon();
 });
 
@@ -4379,28 +4386,37 @@ function setCurLoadingState(state){
     el.innerHTML = '<span>⏸</span><span>متوقف</span>';
   }
 }
+let loadingStartedAt = 0;
+const MIN_LOADING_DISPLAY_MS = 700;
+let loadingFinishTimer = null;
+function markAudioDoneLoading(){
+  if(!isAudioLoading) return;
+  const elapsed = Date.now() - loadingStartedAt;
+  const remaining = MIN_LOADING_DISPLAY_MS - elapsed;
+  clearTimeout(loadingFinishTimer);
+  const finish = () => {
+    isAudioLoading = false;
+    renderSurahList(searchBox.value.trim());
+    setCurLoadingState(audio.paused ? 'paused' : 'playing');
+  };
+  if(remaining > 0) loadingFinishTimer = setTimeout(finish, remaining);
+  else finish();
+}
 audio.addEventListener('waiting', () => {
   isAudioLoading = true;
+  loadingStartedAt = Date.now();
   renderSurahList(searchBox.value.trim());
   setCurLoadingState('loading');
 });
-audio.addEventListener('playing', () => {
-  isAudioLoading = false;
-  renderSurahList(searchBox.value.trim());
-  setCurLoadingState('playing');
-});
-audio.addEventListener('canplay', () => {
-  if(isAudioLoading){
-    isAudioLoading = false;
-    renderSurahList(searchBox.value.trim());
-  }
-});
+audio.addEventListener('playing', markAudioDoneLoading);
 audio.addEventListener('pause', () => {
-  if(currentIndex !== null) setCurLoadingState('paused');
+  if(currentIndex !== null && !isAudioLoading) setCurLoadingState('paused');
 });
 audio.addEventListener('error', () => {
   isAudioLoading = false;
+  clearTimeout(loadingFinishTimer);
   renderSurahList(searchBox.value.trim());
+  setCurLoadingState('paused');
 });
 
 function updateProgressUI(){
