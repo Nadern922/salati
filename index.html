@@ -262,6 +262,8 @@
   .surah-row:last-child{border-bottom:none;}
   .surah-row:hover{background:rgba(224,184,105,0.06);}
   .surah-row.playing{background:rgba(204,154,63,0.14);}
+  .surah-row.audio-loading{background:rgba(224,150,60,0.22); border:1px solid rgba(224,150,60,0.55);}
+  .surah-row.audio-loading .s-name{color:#f0a94e;}
   .surah-row .num{
     width:30px; height:30px; flex:none;
     border:1px solid var(--line); border-radius:50%;
@@ -344,6 +346,21 @@
   .qp-avatar svg{width:60%; height:60%;}
   .qp-info{flex:1; min-width:0;}
   .qp-info .cur-name{font-family:'Amiri', serif; color:var(--cream); font-size:1.2rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .cur-name-row{display:flex; align-items:center; flex-wrap:wrap; gap:8px; min-width:0;}
+  .cur-name-row .cur-name{flex:1; min-width:0;}
+  .cur-loading{
+    display:inline-flex; align-items:center; gap:6px; flex:none;
+    background:rgba(224,184,105,0.14); border:1px solid rgba(224,184,105,0.4); border-radius:20px;
+    padding:3px 10px; color:var(--gold-soft); font-size:0.68rem; font-weight:700;
+  }
+  .cur-loading-playing{background:rgba(62,224,117,0.14); border-color:rgba(62,224,117,0.4); color:#3ee075;}
+  .cur-loading-paused{background:rgba(255,255,255,0.06); border-color:var(--line); color:var(--muted);}
+  .cur-loading-spin{
+    display:inline-block; width:11px; height:11px; flex:none; border-radius:50%;
+    border:2px solid rgba(224,184,105,0.3); border-top-color:var(--gold-soft);
+    animation:cur-loading-spin .7s linear infinite;
+  }
+  @keyframes cur-loading-spin{ to{ transform:rotate(360deg); } }
   .qp-info .cur-sub{font-size:0.8rem; color:var(--gold-soft); margin-top:3px; font-weight:700;}
   .qp-pills{display:flex; gap:8px; margin-top:8px;}
   .qp-pill{
@@ -1921,7 +1938,13 @@
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a3.5 3.5 0 003.5-3.5v-4a3.5 3.5 0 00-7 0v4A3.5 3.5 0 0012 14z"/><path d="M18.5 10.5a6.5 6.5 0 01-13 0" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><line x1="12" y1="17" x2="12" y2="20.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><line x1="8.5" y1="20.5" x2="15.5" y2="20.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
           </div>
           <div class="qp-info">
-            <div class="cur-name" id="curName">—</div>
+            <div class="cur-name-row">
+              <div class="cur-name" id="curName">—</div>
+              <span class="cur-loading" id="curLoading" style="display:none;">
+                <span class="cur-loading-spin"></span>
+                <span>جارٍ التحميل...</span>
+              </span>
+            </div>
             <div class="cur-sub" id="curSub">بدر التركي</div>
             <div class="qp-pills">
               <span class="qp-pill" id="qpAyahCount">—</span>
@@ -4196,12 +4219,14 @@ function fmtTime(s){
   return m + ":" + sec.toString().padStart(2,'0');
 }
 
+let isAudioLoading = false;
 function renderSurahList(filter=""){
   surahListEl.innerHTML = "";
   SURAHS.forEach((name, i) => {
     if(filter && !name.includes(filter)) return;
     const row = document.createElement('div');
-    row.className = 'surah-row' + (currentIndex===i ? ' playing' : '');
+    const isCur = currentIndex===i;
+    row.className = 'surah-row' + (isCur ? ' playing' : '') + (isCur && isAudioLoading ? ' audio-loading' : '');
     row.innerHTML = `
       <div class="num">${i+1}</div>
       <div class="s-name">سورة ${name}</div>
@@ -4305,8 +4330,10 @@ function loadSurah(index, autoplay){
   surahCurMini.textContent = "سورة " + SURAHS[index];
   qpAyahCount.textContent = SURAH_AYAHS[index] + " آيات";
   playerInner.classList.add('show');
+  isAudioLoading = true;
   renderSurahList(searchBox.value.trim());
   updateFavBtn();
+  setCurLoadingState('loading');
   if(autoplay){
     audio.play().then(()=>{ isPlaying = true; updatePlayIcon(); }).catch(()=>{});
   }
@@ -4337,6 +4364,44 @@ nextBtn.addEventListener('click', () => {
   loadSurah(i, true);
 });
 audio.addEventListener('ended', () => { if(!audio.loop) nextBtn.click(); });
+function setCurLoadingState(state){
+  const el = document.getElementById('curLoading');
+  if(!el) return;
+  el.style.display = '';
+  if(state === 'loading'){
+    el.className = 'cur-loading';
+    el.innerHTML = '<span class="cur-loading-spin"></span><span>جارٍ التحميل...</span>';
+  }else if(state === 'playing'){
+    el.className = 'cur-loading cur-loading-playing';
+    el.innerHTML = '<span>🎧</span><span>قيد التشغيل</span>';
+  }else if(state === 'paused'){
+    el.className = 'cur-loading cur-loading-paused';
+    el.innerHTML = '<span>⏸</span><span>متوقف</span>';
+  }
+}
+audio.addEventListener('waiting', () => {
+  isAudioLoading = true;
+  renderSurahList(searchBox.value.trim());
+  setCurLoadingState('loading');
+});
+audio.addEventListener('playing', () => {
+  isAudioLoading = false;
+  renderSurahList(searchBox.value.trim());
+  setCurLoadingState('playing');
+});
+audio.addEventListener('canplay', () => {
+  if(isAudioLoading){
+    isAudioLoading = false;
+    renderSurahList(searchBox.value.trim());
+  }
+});
+audio.addEventListener('pause', () => {
+  if(currentIndex !== null) setCurLoadingState('paused');
+});
+audio.addEventListener('error', () => {
+  isAudioLoading = false;
+  renderSurahList(searchBox.value.trim());
+});
 
 function updateProgressUI(){
   if(audio.duration){
