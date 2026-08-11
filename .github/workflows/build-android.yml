@@ -33,19 +33,7 @@ jobs:
         run: npx cap add android
 
       - name: Fix Kotlin stdlib version conflict
-        run: |
-          cat >> android/build.gradle << 'EOF'
-
-allprojects {
-    configurations.all {
-        resolutionStrategy {
-            force 'org.jetbrains.kotlin:kotlin-stdlib:1.9.24'
-            force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.24'
-            force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.24'
-        }
-    }
-}
-EOF
+        run: echo 'allprojects { configurations.all { resolutionStrategy { force "org.jetbrains.kotlin:kotlin-stdlib:1.9.24" force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.24" force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.24" } } }' >> android/build.gradle
 
       - name: Sync
         run: npx cap sync
