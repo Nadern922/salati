@@ -27,7 +27,7 @@ jobs:
         run: npm install @capacitor/core @capacitor/cli @capacitor/android
 
       - name: Init Capacitor
-        run: npx cap init "صلاتي" "com.nadern922.salati" --web-dir=www
+        run: npx cap init "صلاتي" "com.nadern922.salati" --web-dir=.
 
       - name: Add Android platform
         run: npx cap add android
