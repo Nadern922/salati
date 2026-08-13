@@ -1671,10 +1671,6 @@
 <div class="wrap">
 
   <header class="top">
-    <button class="install-btn" id="installBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v13m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
-      <span data-i18n="header.install">تثبيت التطبيق</span>
-    </button>
   </header>
 
   <div class="travel-banner" id="travelBanner">
@@ -2457,10 +2453,6 @@
 
     <div class="settings-group">
       <div class="settings-group-title" data-i18n="settings.app">التطبيق</div>
-      <button class="more-row" id="settingsInstallBtn">
-        <span class="mr-icon">⬇️</span>
-        <span class="mr-label" data-i18n="settings.installApp">تثبيت التطبيق</span>
-      </button>
       <div class="settings-sub">
         <span class="settings-label">الإصدار</span>
         <span class="settings-label" style="color:var(--muted); font-weight:400;">1.0.0</span>
@@ -3317,9 +3309,6 @@ if(favBtnHeaderEl){
   });
 }
 document.getElementById('settingsClose').addEventListener('click', closeSettingsOverlay);
-document.getElementById('settingsInstallBtn').addEventListener('click', () => {
-  document.getElementById('installBtn').click();
-});
 
 /* زر الجرس (تفعيل تنبيه الأذان) */
 const heroBellBtn = document.getElementById('heroBellBtn');
@@ -3932,9 +3921,8 @@ const TRANSLATIONS = {
     'settings.language': 'اللغة', 'settings.font': 'الخط والحجم', 'settings.fontFamily': 'نوع الخط',
     'settings.small': 'صغير', 'settings.medium': 'متوسط', 'settings.large': 'كبير', 'settings.xlarge': 'أكبر',
     'settings.share': 'مشاركة', 'settings.shareApp': 'مشاركة التطبيق',
-    'settings.app': 'التطبيق', 'settings.installApp': 'تثبيت التطبيق',
+    'settings.app': 'التطبيق',
     'greet.hello': 'السلام عليكم', 'greet.sub': 'اللهم اجعل هذا اليوم مباركاً', 'greet.locating': 'جارٍ التحديد...',
-    'header.install': 'تثبيت التطبيق',
     'hijri.loading': 'متبقي على رمضان...', 'dua.title': 'دعاء اليوم',
     'hero.next': 'الصلاة القادمة', 'hero.remaining': 'الوقت المتبقي',
     'grid.quran': 'القرآن الكريم', 'grid.quranSub': 'اقرأ واستمع وتدبر',
@@ -5466,27 +5454,6 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js').catch(() => {});
   });
 }
-
-const installBtn = document.getElementById('installBtn');
-let deferredInstallPrompt = null;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredInstallPrompt = e;
-  installBtn.classList.add('show');
-});
-
-installBtn.addEventListener('click', async () => {
-  if(!deferredInstallPrompt) return;
-  deferredInstallPrompt.prompt();
-  await deferredInstallPrompt.userChoice;
-  deferredInstallPrompt = null;
-  installBtn.classList.remove('show');
-});
-
-window.addEventListener('appinstalled', () => {
-  installBtn.classList.remove('show');
-});
 
 /* ============ المصحف الشريف (عرض كامل الصفحة) ============ */
 const mushafFab = document.getElementById('mushafFab');
