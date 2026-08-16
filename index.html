@@ -3211,8 +3211,8 @@ function closeAllOverlays(){
     const ov = document.getElementById(id);
     if(ov) ov.classList.remove('open');
   });
-  tabSabah.style.display = '';
-  tabMasaa.style.display = '';
+(function(){window.addEventListener('popstate',function(){var st=window.__salatiPreBackState;window.__salatiPreBackState=null;if(!st)return;if(st.type==='azkar'&&typeof openAzkarOverlay==='function'){openAzkarOverlay();}else if(st.type==='tool'&&typeof 
+                                                                                                                                                                                                                                    openIslamicToolsOverlay==='function'){openIslamicToolsOverlay();}});})();function openQuranOverlay(){  tabMasaa.style.display = '';
   if(typeof stopTasbeehMic === 'function') stopTasbeehMic();
   document.body.style.overflow = '';
   const pmb = document.getElementById('pickerModalBackdrop');
@@ -3226,7 +3226,7 @@ function closeAllOverlays(){
             الحل: عند فتح أي قسم رئيسي نضيف حالة جديدة إلى history، وعند الرجوع (popstate) نغلق
                القسم المفتوح بدل السماح للمتصفح بالخروج من التطبيق. */
   (function(){
-    const SALATI_SECTION_IDS = ['quranOverlay','searchOverlay','azkarOverlay','calendarOverlay',
+    (function(){window.__salatiPreBackState=null;window.addEventListener('popstate',function(){var st=null;if(typeof azkarOverlay!=='undefined'&&azkarOverlay&&azkarOverlay.classList.contains('open')&&typeof azkarOpenMode!=='undefined'&&azkarOpenMode){st={type:'azkar'};}else{var salatiToolIds=['zakatOverlay','converterOverlay','azanVoicesOverlay','calendarOverlay'];for(var si=0;si<salatiToolIds.length;si++){var sEl=document.getElementById(salatiToolIds[si]);if(sEl&&sEl.classList.contains('open')){st={type:'tool'};if(salatiToolIds[si]==='azanVoicesOverlay'&&typeof azanPreviewEl!=='undefined'&&azanPreviewEl)azanPreviewEl.pause();break;}}}window.__salatiPreBackState=st;});})();const SALATI_SECTION_IDS = ['quranOverlay','searchOverlay','azkarOverlay','calendarOverlay',
                                 'qiblaArOverlay','streakOverlay','settingsOverlay','zakatOverlay','namesOverlay','travelOverlay',
                                 'converterOverlay','islamicToolsOverlay','azanVoicesOverlay','cityOverlay','moreOverlay',
                                 'statsOverlay','tafsirOverlay','mushafOverlay'];
