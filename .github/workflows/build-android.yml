@@ -23,6 +23,7 @@ jobs:
         with:
           node-version: 20
 
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -33,7 +34,7 @@ jobs:
         run: npm init -y
 
       - name: Install Capacitor
-        run: npm install @capacitor/core @capacitor/cli @capacitor/android
+        run: npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/app
 
       - name: Prepare web assets
         run: mkdir -p www && cp index.html manifest.json privacy.html icon-192.png icon-512.png icon-maskable-512.png www/
