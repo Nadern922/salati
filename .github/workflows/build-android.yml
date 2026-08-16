@@ -35,8 +35,11 @@ jobs:
       - name: Install Capacitor
         run: npm install @capacitor/core @capacitor/cli @capacitor/android
 
-      - name: Init Capacitor
-        run: npx cap init "صلاتي" "com.nadern922.salati" --web-dir=.
+      - name: Prepare web assets
+        run: mkdir -p www && cp index.html manifest.json privacy.html icon-192.png icon-512.png icon-maskable-512.png www/
+
+       - name: Init Capacitor
+        run: npx cap init "صلاتي" "com.nadern922.salati" --web-dir=www
 
       - name: Add Android platform
         run: npx cap add android
