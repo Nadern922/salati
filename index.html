@@ -3264,7 +3264,7 @@ function closeAllOverlays(){
     });
   })();
   
-  function openQuranOverlay(){
+  (function(){function bindCapacitorBackButton(){if(window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.App){Capacitor.Plugins.App.addListener('backButton',function(ev){if(ev&&ev.canGoBack){window.history.back();}else{Capacitor.Plugins.App.exitApp();}});return true;}return false;}if(!bindCapacitorBackButton()){document.addEventListener('deviceready',bindCapacitorBackButton);}})();function openQuranOverlay(){
   closeAllOverlays();
   quranOverlay.classList.add('open');
   quranOverlay.classList.remove('khatma-mode');
