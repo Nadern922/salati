@@ -3215,9 +3215,56 @@ function closeAllOverlays(){
   tabMasaa.style.display = '';
   if(typeof stopTasbeehMic === 'function') stopTasbeehMic();
   document.body.style.overflow = '';
+  const pmb = document.getElementById('pickerModalBackdrop');
+  if(pmb) pmb.classList.remove('open');
 }
 
-function openQuranOverlay(){
+/* ============ إصلاح: زر الرجوع (خلفي/متصفح) يغلق القسم الحالي بدل الخروج من التطبيق ============
+   المشكلة: الأقسام (القرآن، الأذكار، الإعدادات...) تُفتح وتُغلق فقط بإضافة/إزالة كلاس "open"،
+      بدون أي تسجيل في history المتصفح. فإذا ضغط المستخدم زر الرجوع وهو داخل قسم، ينتقل المتصفح
+         للصفحة/التبويب السابق مباشرة ويُغلق التطبيق (PWA) بدل الرجوع للشاشة الرئيسية.
+            الحل: عند فتح أي قسم رئيسي نضيف حالة جديدة إلى history، وعند الرجوع (popstate) نغلق
+               القسم المفتوح بدل السماح للمتصفح بالخروج من التطبيق. */
+  (function(){
+    const SALATI_SECTION_IDS = ['quranOverlay','searchOverlay','azkarOverlay','calendarOverlay',
+                                'qiblaArOverlay','streakOverlay','settingsOverlay','zakatOverlay','namesOverlay','travelOverlay',
+                                'converterOverlay','islamicToolsOverlay','azanVoicesOverlay','cityOverlay','moreOverlay',
+                                'statsOverlay','tafsirOverlay','mushafOverlay'];
+    let salatiSectionOpen = false;
+    
+    function salatiAnySectionOpen(){
+      return SALATI_SECTION_IDS.some(id => {
+        const el = document.getElementById(id);
+        return !!(el && el.classList.contains('open'));
+      });
+    }
+    
+    function salatiOnOverlayChange(){
+      const isOpenNow = salatiAnySectionOpen();
+      if(isOpenNow && !salatiSectionOpen){
+        salatiSectionOpen = true;
+        history.pushState({salatiSection:true}, '');
+      }else if(!isOpenNow && salatiSectionOpen){
+        salatiSectionOpen = false;
+        if(history.state && history.state.salatiSection) history.back();
+      }
+    }
+    
+    window.addEventListener('popstate', function(){
+      if(salatiAnySectionOpen()){
+        salatiSectionOpen = false;
+        closeAllOverlays();
+      }
+    });
+    
+    SALATI_SECTION_IDS.forEach(id => {
+      const el = document.getElementById(id);
+      if(!el) return;
+      new MutationObserver(salatiOnOverlayChange).observe(el, {attributes:true, attributeFilter:['class']});
+    });
+  })();
+  
+  function openQuranOverlay(){
   closeAllOverlays();
   quranOverlay.classList.add('open');
   quranOverlay.classList.remove('khatma-mode');
