@@ -38,12 +38,10 @@ jobs:
       - name: Prepare web assets
         run: mkdir -p www && cp index.html manifest.json privacy.html icon-192.png icon-512.png icon-maskable-512.png www/
 
-       - name: Init Capacitor
+      - name: Init Capacitor        
         run: npx cap init "صلاتي" "com.nadern922.salati" --web-dir=www
-
       - name: Add Android platform
         run: npx cap add android
-
       - name: Fix Kotlin stdlib version conflict
         run: echo 'allprojects { configurations.all { resolutionStrategy { force "org.jetbrains.kotlin:kotlin-stdlib:1.9.24" force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.24" force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.24" } } }' >> android/build.gradle
 
