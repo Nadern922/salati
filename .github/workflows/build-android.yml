@@ -37,7 +37,7 @@ jobs:
         run: npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/app
 
       - name: Prepare web assets
-        run: mkdir -p www && cp index.html manifest.json privacy.html icon-192.png icon-512.png icon-maskable-512.png www/
+        run: mkdir -p www && cp index.html manifest.json privacy.html icon-192.png icon-512.png icon-maskable-512.png www/ && cp -R audio www/
 
       - name: Init Capacitor        
         run: npx cap init "صلاتي" "com.nadern922.salati" --web-dir=www
