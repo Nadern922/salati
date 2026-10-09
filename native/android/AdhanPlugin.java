@@ -41,7 +41,7 @@ public class AdhanPlugin extends Plugin {
     @PermissionCallback
     private void notificationResult(PluginCall call) {
         JSObject status = AdhanScheduler.status(getContext());
-        if (Boolean.TRUE.equals(status.getBoolean("notifications")) && !AdhanScheduler.canScheduleExact(getContext())) {
+        if (status.optBoolean("notifications", false) && !AdhanScheduler.canScheduleExact(getContext())) {
             Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
                 Uri.parse("package:" + getContext().getPackageName()));
             try { getActivity().startActivity(intent); } catch (RuntimeException ignored) { }
