@@ -23,8 +23,8 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      - name: Test background adhan integration
-        run: node --test tests/adhan-background.test.cjs
+      - name: Test web integration
+        run: node --test tests/*.test.cjs
       - name: Prepare Capacitor app
         run: |
           npm init -y

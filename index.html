@@ -2928,6 +2928,7 @@ const tabSabah = azkarConfig.sabah.tab;
 const tabMasaa = azkarConfig.masaa.tab;
 
 let azkarOpenMode = null;
+let namesReturnState = null;
 let azkarState = {};
 
 function todayKey(mode){
@@ -3222,7 +3223,7 @@ tabSabah.style.display='';tabMasaa.style.display='';
             الحل: عند فتح أي قسم رئيسي نضيف حالة جديدة إلى history، وعند الرجوع (popstate) نغلق
                القسم المفتوح بدل السماح للمتصفح بالخروج من التطبيق. */
   (function(){
-    (function(){window.__salatiPreBackState=null;window.addEventListener('popstate',function(){var st=null;if(typeof azkarOverlay!=='undefined'&&azkarOverlay&&azkarOverlay.classList.contains('open')&&typeof azkarOpenMode!=='undefined'&&azkarOpenMode){st={type:'azkar'};}else{var salatiToolIds=['zakatOverlay','converterOverlay','azanVoicesOverlay','calendarOverlay'];for(var si=0;si<salatiToolIds.length;si++){var sEl=document.getElementById(salatiToolIds[si]);if(sEl&&sEl.classList.contains('open')){st={type:'tool'};if(salatiToolIds[si]==='azanVoicesOverlay'&&typeof azanPreviewEl!=='undefined'&&azanPreviewEl)azanPreviewEl.pause();break;}}}window.__salatiPreBackState=st;});})();const SALATI_SECTION_IDS = ['quranOverlay','searchOverlay','azkarOverlay','calendarOverlay',
+    (function(){window.__salatiPreBackState=null;window.addEventListener('popstate',function(){var st=null;if(document.getElementById('namesOverlay')?.classList.contains('open')){st={type:'names',returnState:namesReturnState};}else if(typeof azkarOverlay!=='undefined'&&azkarOverlay&&azkarOverlay.classList.contains('open')&&typeof azkarOpenMode!=='undefined'&&azkarOpenMode){st={type:'azkar'};}else{var salatiToolIds=['zakatOverlay','converterOverlay','azanVoicesOverlay','calendarOverlay'];for(var si=0;si<salatiToolIds.length;si++){var sEl=document.getElementById(salatiToolIds[si]);if(sEl&&sEl.classList.contains('open')){st={type:'tool'};if(salatiToolIds[si]==='azanVoicesOverlay'&&typeof azanPreviewEl!=='undefined'&&azanPreviewEl)azanPreviewEl.pause();break;}}}window.__salatiPreBackState=st;});})();const SALATI_SECTION_IDS = ['quranOverlay','searchOverlay','azkarOverlay','calendarOverlay',
                                 'qiblaArOverlay','streakOverlay','settingsOverlay','zakatOverlay','namesOverlay','travelOverlay',
                                 'converterOverlay','islamicToolsOverlay','azanVoicesOverlay','cityOverlay','moreOverlay',
                                 'statsOverlay','tafsirOverlay','mushafOverlay'];
@@ -3260,7 +3261,7 @@ tabSabah.style.display='';tabMasaa.style.display='';
     });
   })();
   
-  (function(){function bindCapacitorBackButton(){if(window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.App){Capacitor.Plugins.App.addListener('backButton',function(ev){if(ev&&ev.canGoBack){window.history.back();}else{Capacitor.Plugins.App.exitApp();}});return true;}return false;}if(!bindCapacitorBackButton()){document.addEventListener('deviceready',bindCapacitorBackButton);}})();(function(){window.addEventListener('popstate',function(){var st=window.__salatiPreBackState;window.__salatiPreBackState=null;if(!st)return;if(st.type==='azkar'&&typeof openAzkarOverlay==='function'){openAzkarOverlay();}else if(st.type==='tool'&&typeof openIslamicToolsOverlay==='function'){openIslamicToolsOverlay();}});})();function openQuranOverlay(){
+  (function(){function bindCapacitorBackButton(){if(window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.App){Capacitor.Plugins.App.addListener('backButton',function(ev){if(ev&&ev.canGoBack){window.history.back();}else{Capacitor.Plugins.App.exitApp();}});return true;}return false;}if(!bindCapacitorBackButton()){document.addEventListener('deviceready',bindCapacitorBackButton);}})();(function(){window.addEventListener('popstate',function(){var st=window.__salatiPreBackState;window.__salatiPreBackState=null;if(!st)return;if(st.type==='names'){restoreNamesReturn(st.returnState);}else if(st.type==='azkar'&&typeof openAzkarOverlay==='function'){openAzkarOverlay();}else if(st.type==='tool'&&typeof openIslamicToolsOverlay==='function'){openIslamicToolsOverlay();}});})();function openQuranOverlay(){
   closeAllOverlays();
   quranOverlay.classList.add('open');
   quranOverlay.classList.remove('khatma-mode');
@@ -5000,6 +5001,12 @@ initLocation();
 
 /* ============ نوافذ الأدوات: فتح/إغلاق عام ============ */
 function openSimpleOverlay(id){
+  if(id === 'namesOverlay'){
+    const source = ['azkarOverlay','settingsOverlay','moreOverlay','islamicToolsOverlay']
+      .find(parent => document.getElementById(parent)?.classList.contains('open'));
+    namesReturnState = source ? {source, azkarMode:azkarOpenMode,
+      tasbeehOnly:azkarOverlay.classList.contains('tasbeeh-only')} : null;
+  }
   closeAllOverlays();
   const ov = document.getElementById(id);
   if(!ov) return;
@@ -5011,6 +5018,29 @@ function closeSimpleOverlay(id){
   if(ov) ov.classList.remove('open');
   document.body.style.overflow = '';
   if(typeof setActiveNav === 'function') setActiveNav(null);
+}
+
+function restoreNamesReturn(state = namesReturnState){
+  namesReturnState = null;
+  if(!state) return false;
+  if(state.source === 'azkarOverlay'){
+    openAzkarOverlay();
+    if(state.tasbeehOnly) azkarOverlay.classList.add('tasbeeh-only');
+    if(state.azkarMode) openAzkarTab(state.azkarMode);
+  }else if(state.source === 'settingsOverlay'){
+    openSettingsOverlay();
+  }else if(state.source === 'moreOverlay'){
+    openMoreOverlay();
+  }else if(state.source === 'islamicToolsOverlay'){
+    openIslamicToolsOverlay();
+  }else{
+    return false;
+  }
+  return true;
+}
+function closeNamesOverlay(){
+  document.getElementById('namesOverlay').classList.remove('open');
+  if(!restoreNamesReturn()) closeSimpleOverlay('namesOverlay');
 }
 
 /* ============ حاسبة الزكاة ============ */
@@ -5376,7 +5406,10 @@ if(cityUseGpsBtn){
   const openBtn = document.getElementById(openId);
   const closeBtn = closeId ? document.getElementById(closeId) : null;
   if(openBtn) openBtn.addEventListener('click', () => { openSimpleOverlay(ovId); if(onOpen) onOpen(); });
-  if(closeBtn) closeBtn.addEventListener('click', () => closeSimpleOverlay(ovId));
+  if(closeBtn) closeBtn.addEventListener('click', () => {
+    if(ovId === 'namesOverlay') closeNamesOverlay();
+    else closeSimpleOverlay(ovId);
+  });
 });
 
 /* هذي الشاشات تُفتح غالبًا من داخل "أدوات إسلامية"، فزر الرجوع يرجع لها بدل الرئيسية */
