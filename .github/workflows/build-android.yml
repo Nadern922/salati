@@ -6,11 +6,11 @@ on:
       versionCode:
         description: 'Android versionCode (must be higher than the last one accepted by Play Console)'
         required: true
-        default: '2'
+        default: '3'
       versionName:
         description: 'Android versionName (user-visible, e.g. 1.1)'
         required: true
-        default: '1.1'
+        default: '1.2'
 
 jobs:
   build:
@@ -21,7 +21,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
 
       - name: Setup Java
