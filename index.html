@@ -1540,6 +1540,7 @@
   .city-item:hover{border-color:var(--gold-soft); color:var(--gold-soft);}
   .city-empty{text-align:center; color:var(--muted); font-size:0.82rem; padding:20px 0;}
 
+  #backgroundAdhanEnable[hidden]{display:none;}
   /* ============ اختيار صوت الأذان ============ */
   .azan-voice-row{
     display:flex; align-items:center; gap:12px; padding:12px 14px; margin-bottom:8px;
@@ -2434,6 +2435,8 @@
           <span class="toggle-knob"></span>
         </button>
       </div>
+      <p id="backgroundAdhanStatus" role="status" style="font-size:.85rem; color:var(--muted); line-height:1.8;"></p>
+      <button class="more-row" id="backgroundAdhanEnable" hidden>تفعيل الأذان في الخلفية</button>
       <div class="settings-sub" style="display:none;">
         <span class="settings-label">إذن الإشعارات: <span id="notifPermStatus">—</span></span>
         <button class="more-row" id="notifPermBtn" style="flex:none; padding:8px 16px;">تفعيل</button>
@@ -2856,6 +2859,7 @@
   </div>
 </div>
 
+<script src="js/adhan-background.js"></script>
 <script>
 /* ============ أذكار الصباح والمساء ============ */
 const AZKAR_SABAH = [
@@ -3372,25 +3376,33 @@ function refreshBellUI(){
 }
 refreshBellUI();
 
+let azanAlertToggleBusy = false;
 async function toggleAzanAlert(){
-  if(!azanAlertEnabled){
-    if('Notification' in window && Notification.permission === 'default'){
-      try{ await Notification.requestPermission(); }catch(e){}
-    }
-    azanAlertEnabled = true;
-    localStorage.setItem(AZAN_ALERT_KEY, '1');
-    playAzanChime(true);
-    if('Notification' in window && Notification.permission === 'granted'){
-      new Notification('تم تفعيل تنبيه الأذان', {body:'سيصلك تنبيه صوتي عند دخول وقت كل صلاة إن شاء الله.'});
+  if(azanAlertToggleBusy) return;
+  azanAlertToggleBusy = true;
+  try{
+    if(!azanAlertEnabled){
+      if(getNativeAdhan()){
+        if(!await requestBackgroundAdhanAccess()) return;
+      }else if('Notification' in window && Notification.permission === 'default'){
+        try{ await Notification.requestPermission(); }catch(e){}
+      }
+      azanAlertEnabled = true;
+      localStorage.setItem(AZAN_ALERT_KEY, '1');
+      playAzanChime(true);
+      if(!getNativeAdhan()){
+        alert('تم تفعيل تنبيه الأذان. يعمل في نسخة الويب طالما الصفحة مفتوحة. للعمل عند قفل الشاشة، استخدم نسخة أندرويد.');
+      }
     }else{
-      alert('تم تفعيل تنبيه الأذان. سيرن التنبيه صوتيًا داخل التطبيق عند دخول وقت الصلاة طالما الصفحة مفتوحة.');
+      azanAlertEnabled = false;
+      localStorage.setItem(AZAN_ALERT_KEY, '0');
     }
-  }else{
-    azanAlertEnabled = false;
-    localStorage.setItem(AZAN_ALERT_KEY, '0');
-  }
-  refreshBellUI();
-  refreshNotifPermUI();
+    refreshBellUI();
+    refreshNotifPermUI();
+    await syncBackgroundAdhan();
+  }catch(e){
+    setBackgroundAdhanStatus('تعذّر تفعيل الأذان في الخلفية. تحقق من الأذونات والاتصال بالإنترنت.');
+  }finally{ azanAlertToggleBusy = false; }
 }
 heroBellBtn.addEventListener('click', toggleAzanAlert);
 if(settingsAzanToggle) settingsAzanToggle.addEventListener('click', toggleAzanAlert);
@@ -3497,7 +3509,7 @@ function playAzanChime(preview=false){
 
 let lastAzanFiredKey = null;
 function checkAzanAlert(prayerKey, msRemaining){
-  if(!azanAlertEnabled) return;
+  if(!azanAlertEnabled || prayerKey === 'Sunrise' || getNativeAdhan()) return;
   const fireKey = prayerKey + '_' + new Date().toDateString();
   if(msRemaining <= 1000 && lastAzanFiredKey !== fireKey){
     lastAzanFiredKey = fireKey;
@@ -4771,6 +4783,7 @@ async function fetchTimings(lat, lon, cityLabel){
   cityNameEl.textContent = "جارٍ التحميل...";
   updateQibla(lat, lon);
   lastFetchedLat = lat; lastFetchedLon = lon; lastFetchedCityLabel = cityLabel;
+  syncBackgroundAdhan();
   if(typeof checkTravelStatus === 'function') checkTravelStatus(lat, lon);
   const method = (typeof getCalcMethod === 'function') ? getCalcMethod() : '4';
   const cacheKey = `timings_${lat.toFixed(2)}_${lon.toFixed(2)}_${new Date().toDateString()}_${method}`;
@@ -5312,6 +5325,7 @@ function renderAzanVoicesList(){
       const id = parseInt(row.dataset.id, 10);
       localStorage.setItem(AZAN_VOICE_KEY, String(id));
       renderAzanVoicesList();
+      syncBackgroundAdhan();
       if(navigator.vibrate) navigator.vibrate(30);
     });
   });

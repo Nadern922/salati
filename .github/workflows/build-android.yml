@@ -37,12 +37,15 @@ jobs:
         run: npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/app
 
       - name: Prepare web assets
-        run: mkdir -p www && cp index.html manifest.json privacy.html icon-192.png icon-512.png icon-maskable-512.png www/ && cp -R audio www/
+        run: mkdir -p www && cp index.html manifest.json privacy.html icon-192.png icon-512.png icon-maskable-512.png www/ && cp -R audio js www/
 
       - name: Init Capacitor        
         run: npx cap init "صلاتي" "com.nadern922.salati" --web-dir=www
       - name: Add Android platform
         run: npx cap add android
+      - name: Install background adhan
+        run: python3 scripts/install-android-adhan.py
+
       - name: Force target/compile SDK 36 (Android 16 requirement)
         run: |
           sed -i "s/compileSdkVersion = [0-9]\+/compileSdkVersion = 36/" android/variables.gradle

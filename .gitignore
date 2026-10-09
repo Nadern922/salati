@@ -1,0 +1,8 @@
+node_modules/
+android/
+www/
+package.json
+package-lock.json
+capacitor.config.*
+__pycache__/
+*.pyc
