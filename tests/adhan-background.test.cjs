@@ -110,3 +110,13 @@ test('GPS failure preserves last prayer location instead of replacing its alarms
   saved='invalid';vm.runInContext('useRiyadhDefault()',ctx);
   assert.deepEqual(calls[1],[24.7136,46.6753,'الرياض (افتراضي)']);
 });
+test('disable during permission-status lookup cannot re-enable a stale native schedule',async()=>{
+  const h=harness();
+  let finishStatus;
+  h.ctx.window.Capacitor.Plugins.Adhan.status=()=>new Promise(resolve=>{finishStatus=resolve;});
+  const pending=h.run('syncBackgroundAdhan()');
+  await new Promise(resolve=>setImmediate(resolve));
+  await h.run('azanAlertEnabled=false; syncBackgroundAdhan()');
+  finishStatus({notifications:true,exactAlarms:true});await pending;
+  assert.deepEqual(h.calls,['cancel']);
+});

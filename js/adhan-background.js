@@ -54,6 +54,7 @@ function syncBackgroundAdhan(){
     if(version !== nativeAdhanSyncVersion || !azanAlertEnabled) return;
     try{
       const status = await plugin.status();
+      if(version !== nativeAdhanSyncVersion || !azanAlertEnabled) return;
       if(!status.notifications || !status.exactAlarms){ await renderBackgroundAdhanStatus(status); return; }
       if(lastFetchedLat === null || lastFetchedLon === null){
         setBackgroundAdhanStatus('حدد مدينتك أولًا لحفظ مواقيت الأذان.'); return;

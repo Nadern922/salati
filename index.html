@@ -3399,7 +3399,7 @@ async function toggleAzanAlert(){
     }
     refreshBellUI();
     refreshNotifPermUI();
-    await syncBackgroundAdhan();
+    syncBackgroundAdhan();
   }catch(e){
     setBackgroundAdhanStatus('تعذّر تفعيل الأذان في الخلفية. تحقق من الأذونات والاتصال بالإنترنت.');
   }finally{ azanAlertToggleBusy = false; }

@@ -30,6 +30,9 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Test background adhan integration
+        run: node --test tests/adhan-background.test.cjs
+
       - name: Init npm project
         run: npm init -y
 
