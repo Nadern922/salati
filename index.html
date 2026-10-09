@@ -1881,12 +1881,6 @@
     </svg>
     <span>أدوات إسلامية</span>
   </button>
-  <button class="nav-item active" id="navHome">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>
-    </svg>
-    <span data-i18n="nav.home">الرئيسية</span>
-  </button>
   <button class="nav-item" id="navCalendar">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>
@@ -3190,11 +3184,10 @@ const settingsOverlay = document.getElementById('settingsOverlay');
 const searchOverlay = document.getElementById('searchOverlay');
 const calendarOverlay = document.getElementById('calendarOverlay');
 const navCalendarBtn = document.getElementById('navCalendar');
-const navHomeBtn = document.getElementById('navHome');
 const navQuranBtn = document.getElementById('navQuran');
 const navSettingsBtn = document.getElementById('navSettings');
 const navAzkarBtn = document.getElementById('navAzkar');
-const navItems = [navCalendarBtn, navHomeBtn, navQuranBtn, navSettingsBtn, navAzkarBtn];
+const navItems = [navCalendarBtn, navQuranBtn, navSettingsBtn, navAzkarBtn];
 
 function setActiveNav(btn){
   navItems.forEach(b => b.classList.toggle('active', b === btn));
@@ -3277,7 +3270,7 @@ tabSabah.style.display='';tabMasaa.style.display='';
 function closeQuranOverlay(){
   quranOverlay.classList.remove('open');
   document.body.style.overflow = '';
-  setActiveNav(navHomeBtn);
+  setActiveNav(null);
 }
 function openAzkarOverlay(){
   closeAllOverlays();
@@ -3301,18 +3294,18 @@ function closeAzkarOverlay(){
   azkarOverlay.classList.remove('open');
   document.body.style.overflow = '';
   if(typeof stopTasbeehMic === 'function') stopTasbeehMic();
-  setActiveNav(navHomeBtn);
+  setActiveNav(null);
 }
 function openSearchOverlay(){
   closeAllOverlays();
   searchOverlay.classList.add('open');
   document.body.style.overflow = 'hidden';
-  setActiveNav(navHomeBtn);
+  setActiveNav(null);
 }
 function closeSearchOverlay(){
   searchOverlay.classList.remove('open');
   document.body.style.overflow = '';
-  setActiveNav(navHomeBtn);
+  setActiveNav(null);
 }
 function openSettingsOverlay(){
   closeAllOverlays();
@@ -3323,16 +3316,12 @@ function openSettingsOverlay(){
 function closeSettingsOverlay(){
   settingsOverlay.classList.remove('open');
   document.body.style.overflow = '';
-  setActiveNav(navHomeBtn);
+  setActiveNav(null);
 }
 /* شبكة الوصول السريع بالصفحة الرئيسية */
 document.getElementById('quranClose').addEventListener('click', closeQuranOverlay);
 
 navCalendarBtn.addEventListener('click', openKhatmaQuick);
-navHomeBtn.addEventListener('click', () => {
-  setActiveNav(navHomeBtn);
-  closeAllOverlays();
-  window.scrollTo({top:0, behavior:'smooth'});
 });
 document.getElementById('searchClose').addEventListener('click', closeSearchOverlay);
 navSettingsBtn.addEventListener('click', openSettingsOverlay);
@@ -4570,7 +4559,7 @@ document.getElementById('qpViewBtn').addEventListener('click', () => {
   document.body.style.overflow = 'hidden';
   mushafLoaded = true;
   jumpToSurah(currentIndex + 1);
-  setActiveNav(navHomeBtn);
+  setActiveNav(null);
 });
 
 /* ============ أوقات الصلاة ============ */
@@ -4753,7 +4742,7 @@ function openQiblaAR(){
 function closeQiblaAR(){
   qiblaArOverlay.classList.remove('open');
   document.body.style.overflow = '';
-  setActiveNav(navHomeBtn);
+  setActiveNav(null);
 }
 
 qiblaArClose.addEventListener('click', closeQiblaAR);
@@ -5022,7 +5011,7 @@ function closeSimpleOverlay(id){
   const ov = document.getElementById(id);
   if(ov) ov.classList.remove('open');
   document.body.style.overflow = '';
-  if(typeof setActiveNav === 'function' && typeof navHomeBtn !== 'undefined') setActiveNav(navHomeBtn);
+  if(typeof setActiveNav === 'function') setActiveNav(null);
 }
 
 /* ============ حاسبة الزكاة ============ */
@@ -5439,7 +5428,7 @@ function openMoreOverlay(){
 function closeMoreOverlay(){
   document.getElementById('moreOverlay').classList.remove('open');
   document.body.style.overflow = '';
-  setActiveNav(navHomeBtn);
+  setActiveNav(null);
 }
 document.getElementById('moreClose').addEventListener('click', closeMoreOverlay);
 document.getElementById('moreQiblaBtn').addEventListener('click', () => { closeAllOverlays(); if(typeof openQiblaAR === 'function') openQiblaAR(); });
@@ -5952,7 +5941,7 @@ async function jumpToSurah(surahNumber){
 mushafFab.addEventListener('click', () => {
   mushafOverlay.classList.add('open');
   document.body.style.overflow = 'hidden';
-  if(typeof setActiveNav === 'function') setActiveNav(navHomeBtn);
+  if(typeof setActiveNav === 'function') setActiveNav(null);
   if(!mushafLoaded){
     mushafLoaded = true;
     const mark = getBookmark();
@@ -5964,7 +5953,7 @@ mushafFab.addEventListener('click', () => {
 mushafClose.addEventListener('click', () => {
   mushafOverlay.classList.remove('open');
   document.body.style.overflow = '';
-  setActiveNav(navHomeBtn);
+  setActiveNav(null);
 });
 
 mushafNextBtn.addEventListener('click', () => loadMushafPage(mushafCurrentPage + 1));
