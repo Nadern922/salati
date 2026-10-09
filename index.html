@@ -4783,6 +4783,7 @@ async function fetchTimings(lat, lon, cityLabel){
   cityNameEl.textContent = "جارٍ التحميل...";
   updateQibla(lat, lon);
   lastFetchedLat = lat; lastFetchedLon = lon; lastFetchedCityLabel = cityLabel;
+  try{ localStorage.setItem('last_prayer_location', JSON.stringify({lat, lon, name:cityLabel})); }catch(e){}
   syncBackgroundAdhan();
   if(typeof checkTravelStatus === 'function') checkTravelStatus(lat, lon);
   const method = (typeof getCalcMethod === 'function') ? getCalcMethod() : '4';
@@ -4943,6 +4944,15 @@ function updateNextPrayer(){
 }
 
 function useRiyadhDefault(){
+  // Keep the last known city when GPS is unavailable, especially when offline.
+  try{
+    const saved = JSON.parse(localStorage.getItem('last_prayer_location') || 'null');
+    if(saved && Number.isFinite(saved.lat) && Number.isFinite(saved.lon)
+      && Math.abs(saved.lat) <= 90 && Math.abs(saved.lon) <= 180){
+      fetchTimings(saved.lat, saved.lon, saved.name || 'آخر موقع محفوظ');
+      return;
+    }
+  }catch(e){}
   fetchTimings(24.7136, 46.6753, "الرياض (افتراضي)");
 }
 

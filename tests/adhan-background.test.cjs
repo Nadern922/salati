@@ -99,3 +99,14 @@ test('enable choice survives pending exact-alarm permission settings',async()=>{
   assert.equal(h.calls.length,0);
   assert.match(h.elements.get('backgroundAdhanStatus').textContent,/المنبّهات/);
 });
+test('GPS failure preserves last prayer location instead of replacing its alarms with Riyadh',()=>{
+  let saved=JSON.stringify({lat:21.4,lon:39.8,name:'مكة'});
+  const calls=[];
+  const ctx=vm.createContext({localStorage:{getItem:()=>saved},fetchTimings:(...args)=>calls.push(args)});
+  const part=fs.readFileSync('index.html','utf8').split('function useRiyadhDefault(){')[1].split('/* ============ حفظ الموقع الأساسي')[0];
+  vm.runInContext('function useRiyadhDefault(){'+part,ctx);
+  vm.runInContext('useRiyadhDefault()',ctx);
+  assert.deepEqual(calls[0],[21.4,39.8,'مكة']);
+  saved='invalid';vm.runInContext('useRiyadhDefault()',ctx);
+  assert.deepEqual(calls[1],[24.7136,46.6753,'الرياض (افتراضي)']);
+});
