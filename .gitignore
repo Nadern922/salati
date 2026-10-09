@@ -1,6 +1,6 @@
 node_modules/
-android/
-www/
+/android/
+/www/
 package.json
 package-lock.json
 capacitor.config.*
