@@ -73,12 +73,12 @@ public final class AdhanScheduler {
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(WORK, ExistingPeriodicWorkPolicy.KEEP, work);
         try {
             if (System.currentTimeMillis() - prefs.getLong("refreshed", 0) > TimeUnit.HOURS.toMillis(12)
-                || status(context).getInt("count", 0) < 5) {
+                || status(context).optInt("count", 0) < 5) {
                 refresh(context);
             } else { restore(context); }
         } catch (Exception e) {
             restore(context);
-            if (status(context).getInt("count", 0) == 0) throw e;
+            if (status(context).optInt("count", 0) == 0) throw e;
         }
     }
     static synchronized void refresh(Context context) throws Exception {

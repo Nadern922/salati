@@ -79,3 +79,23 @@ test('all inline scripts and background bridge parse',()=>{
     if(!/\bsrc=|application\/ld\+json/.test(match[1]))new vm.Script(match[2]);
   }
 });
+test('custom native plugin is registered before first use',async()=>{
+  const h=harness();
+  const cap=h.ctx.window.Capacitor;
+  const plugin=cap.Plugins.Adhan;
+  delete cap.Plugins.Adhan;
+  let registered=0;
+  cap.registerPlugin=name=>{assert.equal(name,'Adhan');registered++;return plugin;};
+  await h.run('syncBackgroundAdhan()');
+  h.run('getNativeAdhan()');
+  assert.equal(registered,1);
+  assert.equal(h.calls.length,1);
+});
+test('enable choice survives pending exact-alarm permission settings',async()=>{
+  const h=harness();
+  h.ctx.window.Capacitor.Plugins.Adhan.status=async()=>({notifications:true,exactAlarms:false,count:0});
+  assert.equal(await h.run('requestBackgroundAdhanAccess()'),true);
+  await h.run('syncBackgroundAdhan()');
+  assert.equal(h.calls.length,0);
+  assert.match(h.elements.get('backgroundAdhanStatus').textContent,/المنبّهات/);
+});

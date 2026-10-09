@@ -1,11 +1,15 @@
 /* Android owns adhan playback, even while the WebView is visible. */
+let nativeAdhanPlugin = null;
 let nativeAdhanSyncVersion = 0;
 let nativeAdhanSyncQueue = Promise.resolve();
 function getNativeAdhan(){
   const cap = window.Capacitor;
   if(!cap || cap.getPlatform?.() !== 'android') return null;
   if(cap.isPluginAvailable && !cap.isPluginAvailable('Adhan')) return null;
-  return cap.Plugins?.Adhan || null;
+  if(!nativeAdhanPlugin){
+    nativeAdhanPlugin = cap.registerPlugin ? cap.registerPlugin('Adhan') : cap.Plugins?.Adhan;
+  }
+  return nativeAdhanPlugin || null;
 }
 function setBackgroundAdhanStatus(message){
   const el = document.getElementById('backgroundAdhanStatus');
@@ -31,7 +35,9 @@ async function requestBackgroundAdhanAccess(){
   await plugin.requestAccess();
   const status = await plugin.status();
   await renderBackgroundAdhanStatus(status);
-  return status.notifications && status.exactAlarms;
+  // Keep the user's enable choice while Android's exact-alarm settings are open.
+  // Returning to the app schedules it once that permission has been granted.
+  return status.notifications;
 }
 function syncBackgroundAdhan(){
   const plugin = getNativeAdhan();
@@ -89,6 +95,12 @@ function initBackgroundAdhan(){
   });
   document.addEventListener('visibilitychange', () => {
     if(document.visibilityState === 'visible') syncBackgroundAdhan();
+  });
+  const cap = window.Capacitor;
+  const app = cap.isPluginAvailable?.('App') && cap.registerPlugin
+    ? cap.registerPlugin('App') : cap.Plugins?.App;
+  app?.addListener('appStateChange', state => {
+    if(state.isActive) syncBackgroundAdhan();
   });
   window.addEventListener('online', syncBackgroundAdhan);
   syncBackgroundAdhan();
