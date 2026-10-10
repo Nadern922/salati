@@ -1,13 +1,161 @@
 window.SALATI_STORIES = {
   "stories": [
     {
+      "id": "musa-shanqiti",
+      "title": "موسى عليه السلام",
+      "subtitle": "تسجيلات أصلية بصوت الشيخ محمد بن علي الشنقيطي",
+      "category": "قصص الأنبياء",
+      "description": "ثلاثة مقاطع من سلسلة قصص الأنبياء، بصوت الشيخ محمد بن علي الشنقيطي.",
+      "cover": "stories/images/journey.webp",
+      "coverAlt": "مشهد طبيعي رمزي دون تجسيد أشخاص",
+      "narrator": "الشيخ محمد بن علي الشنقيطي",
+      "narration": "تسجيلات أصلية بصوت الشيخ محمد بن علي الشنقيطي، من مكتبة الطريق إلى الله.",
+      "artNote": "مشاهد طبيعية رمزية، لا تصوّر الأنبياء أو الملائكة ولا تمثّل حقيقة الجنة.",
+      "methodology": "التسجيلات محاضرات منشورة بصوت الشيخ. الوصف المكتوب تعريف بالمقاطع، وليس تفريغًا لكلامه. رابط المصدر متاح لكل مقطع.",
+      "chapters": [
+        {
+          "id": "2012-09-04",
+          "title": "قصة موسى · ٤ سبتمبر ٢٠١٢",
+          "eyebrow": "بصوت الشيخ محمد بن علي الشنقيطي",
+          "image": "stories/images/journey.webp",
+          "imageAlt": "مشهد طبيعي رمزي دون تجسيد أشخاص",
+          "paragraphs": [
+            "استمع إلى «قصة موسى · ٤ سبتمبر ٢٠١٢» بصوت الشيخ محمد بن علي الشنقيطي.",
+            "يمكنك الانتقال بين المقاطع، وتغيير سرعة الاستماع، واستكمال التسجيل من موضع توقفك."
+          ],
+          "lesson": "",
+          "sources": [
+            {
+              "label": "التسجيل الأصلي · الطريق إلى الله",
+              "url": "https://way2allah.com/khotab-item-66208.htm"
+            }
+          ],
+          "duration": 876.12,
+          "audio": "https://archive.org/download/heekmaa338/khalijia-shinqiti-mosa-5-3-9-2012.mp4"
+        },
+        {
+          "id": "2012-09-11",
+          "title": "قصة موسى · ١١ سبتمبر ٢٠١٢",
+          "eyebrow": "بصوت الشيخ محمد بن علي الشنقيطي",
+          "image": "stories/images/earth.webp",
+          "imageAlt": "مشهد طبيعي رمزي دون تجسيد أشخاص",
+          "paragraphs": [
+            "استمع إلى «قصة موسى · ١١ سبتمبر ٢٠١٢» بصوت الشيخ محمد بن علي الشنقيطي.",
+            "يمكنك الانتقال بين المقاطع، وتغيير سرعة الاستماع، واستكمال التسجيل من موضع توقفك."
+          ],
+          "lesson": "",
+          "sources": [
+            {
+              "label": "التسجيل الأصلي · الطريق إلى الله",
+              "url": "https://way2allah.com/khotab-item-66599.htm"
+            }
+          ],
+          "duration": 752.79,
+          "audio": "https://archive.org/download/heekmaa341/khalijia-shinqiti-mosa-9-9-2012.mp3"
+        },
+        {
+          "id": "2012-09-13",
+          "title": "قصة موسى · ١٣ سبتمبر ٢٠١٢",
+          "eyebrow": "بصوت الشيخ محمد بن علي الشنقيطي",
+          "image": "stories/images/journey.webp",
+          "imageAlt": "مشهد طبيعي رمزي دون تجسيد أشخاص",
+          "paragraphs": [
+            "استمع إلى «قصة موسى · ١٣ سبتمبر ٢٠١٢» بصوت الشيخ محمد بن علي الشنقيطي.",
+            "يمكنك الانتقال بين المقاطع، وتغيير سرعة الاستماع، واستكمال التسجيل من موضع توقفك."
+          ],
+          "lesson": "",
+          "sources": [
+            {
+              "label": "التسجيل الأصلي · الطريق إلى الله",
+              "url": "https://way2allah.com/khotab-item-66776.htm"
+            }
+          ],
+          "duration": 763.77,
+          "audio": "https://archive.org/download/heekmaa343/khalijia-shinqiti-mosa-13-9-2012.mp3"
+        }
+      ],
+      "duration": 2392.68
+    },
+    {
+      "id": "ad-shanqiti",
+      "title": "هود وقوم عاد",
+      "subtitle": "تسجيلات أصلية بصوت الشيخ محمد بن علي الشنقيطي",
+      "category": "قصص الأنبياء",
+      "description": "تسجيل «حقيقة قوم عاد وهل أهلكهم الله» بصوت الشيخ محمد بن علي الشنقيطي.",
+      "cover": "stories/images/earth.webp",
+      "coverAlt": "مشهد طبيعي رمزي دون تجسيد أشخاص",
+      "narrator": "الشيخ محمد بن علي الشنقيطي",
+      "narration": "تسجيلات أصلية بصوت الشيخ محمد بن علي الشنقيطي، من مكتبة الطريق إلى الله.",
+      "artNote": "مشاهد طبيعية رمزية، لا تصوّر الأنبياء أو الملائكة ولا تمثّل حقيقة الجنة.",
+      "methodology": "التسجيلات محاضرات منشورة بصوت الشيخ. الوصف المكتوب تعريف بالمقاطع، وليس تفريغًا لكلامه. رابط المصدر متاح لكل مقطع.",
+      "chapters": [
+        {
+          "id": "ad",
+          "title": "حقيقة قوم عاد وهل أهلكهم الله",
+          "eyebrow": "بصوت الشيخ محمد بن علي الشنقيطي",
+          "image": "stories/images/earth.webp",
+          "imageAlt": "مشهد طبيعي رمزي دون تجسيد أشخاص",
+          "paragraphs": [
+            "استمع إلى «حقيقة قوم عاد وهل أهلكهم الله» بصوت الشيخ محمد بن علي الشنقيطي.",
+            "يمكنك الانتقال بين المقاطع، وتغيير سرعة الاستماع، واستكمال التسجيل من موضع توقفك."
+          ],
+          "lesson": "",
+          "sources": [
+            {
+              "label": "التسجيل الأصلي · الطريق إلى الله",
+              "url": "https://way2allah.com/khotab-item-288394.htm"
+            }
+          ],
+          "duration": 2021.72,
+          "audio": "https://archive.org/download/media-way2allah-_3420/alshekh_mhmd_alshnkete_%F0%9F%8E%99_hkeka_kwm_3ad__whl_ahlkm_allh.mp3"
+        }
+      ],
+      "duration": 2021.72
+    },
+    {
+      "id": "kahf-shanqiti",
+      "title": "أهل الكهف",
+      "subtitle": "تسجيلات أصلية بصوت الشيخ محمد بن علي الشنقيطي",
+      "category": "قصص القرآن",
+      "description": "قصة أهل الكهف بصوت الشيخ محمد بن علي الشنقيطي، في تسجيل أصلي من محاضراته.",
+      "cover": "stories/images/forest.webp",
+      "coverAlt": "مشهد طبيعي رمزي دون تجسيد أشخاص",
+      "narrator": "الشيخ محمد بن علي الشنقيطي",
+      "narration": "تسجيلات أصلية بصوت الشيخ محمد بن علي الشنقيطي، من مكتبة الطريق إلى الله.",
+      "artNote": "مشاهد طبيعية رمزية، لا تصوّر الأنبياء أو الملائكة ولا تمثّل حقيقة الجنة.",
+      "methodology": "التسجيلات محاضرات منشورة بصوت الشيخ. الوصف المكتوب تعريف بالمقاطع، وليس تفريغًا لكلامه. رابط المصدر متاح لكل مقطع.",
+      "chapters": [
+        {
+          "id": "cave",
+          "title": "قصة أهل الكهف",
+          "eyebrow": "بصوت الشيخ محمد بن علي الشنقيطي",
+          "image": "stories/images/forest.webp",
+          "imageAlt": "مشهد طبيعي رمزي دون تجسيد أشخاص",
+          "paragraphs": [
+            "استمع إلى «قصة أهل الكهف» بصوت الشيخ محمد بن علي الشنقيطي.",
+            "يمكنك الانتقال بين المقاطع، وتغيير سرعة الاستماع، واستكمال التسجيل من موضع توقفك."
+          ],
+          "lesson": "",
+          "sources": [
+            {
+              "label": "التسجيل الأصلي · الطريق إلى الله",
+              "url": "https://way2allah.com/khotab-item-288393.htm"
+            }
+          ],
+          "duration": 3877.51,
+          "audio": "https://archive.org/download/media-way2allah-_3420/alshekh_mhmd_alshnkete_ksa_ahl_alkhf_wkef_kshfhm_ahl_alkrea_wma_alsr_alze_g3l_ahl_alkrea_eshkwn_bhm.mp3"
+        }
+      ],
+      "duration": 3877.51
+    },
+    {
       "id": "adam",
       "title": "آدم عليه السلام",
       "subtitle": "البداية الأولى · العلم والتكريم والتوبة",
       "category": "قصص الأنبياء",
       "description": "رحلة هادئة في قصة بداية الإنسان، من الخلق والتكريم إلى التوبة والحياة على الأرض، كما جاءت في القرآن الكريم.",
       "cover": "stories/images/garden.webp",
-      "narration": "سرد عربي بصوت مولّد آليًا، مبني على معاني الآيات؛ وليس تلاوة قرآنية.",
+      "narration": "قصة مكتوبة للقراءة. التسجيل بصوت الشيخ محمد بن علي الشنقيطي غير متاح لهذه القصة حاليًا.",
       "artNote": "مشاهد طبيعية رمزية، لا تصوّر الأنبياء أو الملائكة ولا تمثّل حقيقة الجنة.",
       "methodology": "هذا سرد موجز لمعاني الآيات، وليس نقلًا حرفيًا للتفسير. لم نضف حوارات متخيّلة أو تفاصيل لم يذكرها القرآن، مثل نوع الشجرة أو مكان الهبوط. العبر تأملات تربوية مستفادة من القصة.",
       "chapters": [
@@ -32,8 +180,7 @@ window.SALATI_STORIES = {
               "url": "https://quran.com/15/26-29"
             }
           ],
-          "duration": 50.62,
-          "audio": "stories/audio/adam-beginning.mp3"
+          "duration": 0
         },
         {
           "id": "knowledge",
@@ -52,8 +199,7 @@ window.SALATI_STORIES = {
               "url": "https://quran.com/2/31-33"
             }
           ],
-          "duration": 45.7,
-          "audio": "stories/audio/adam-knowledge.mp3"
+          "duration": 0
         },
         {
           "id": "honor",
@@ -80,8 +226,7 @@ window.SALATI_STORIES = {
               "url": "https://quran.com/7/12-18"
             }
           ],
-          "duration": 51.22,
-          "audio": "stories/audio/adam-honor.mp3"
+          "duration": 0
         },
         {
           "id": "garden",
@@ -104,8 +249,7 @@ window.SALATI_STORIES = {
               "url": "https://quran.com/20/117-119"
             }
           ],
-          "duration": 48.62,
-          "audio": "stories/audio/adam-garden.mp3"
+          "duration": 0
         },
         {
           "id": "temptation",
@@ -128,8 +272,7 @@ window.SALATI_STORIES = {
               "url": "https://quran.com/20/120-121"
             }
           ],
-          "duration": 51.58,
-          "audio": "stories/audio/adam-temptation.mp3"
+          "duration": 0
         },
         {
           "id": "repentance",
@@ -156,8 +299,7 @@ window.SALATI_STORIES = {
               "url": "https://quran.com/20/122"
             }
           ],
-          "duration": 51.36,
-          "audio": "stories/audio/adam-repentance.mp3"
+          "duration": 0
         },
         {
           "id": "earth",
@@ -184,11 +326,11 @@ window.SALATI_STORIES = {
               "url": "https://quran.com/20/123-124"
             }
           ],
-          "duration": 53.09,
-          "audio": "stories/audio/adam-earth.mp3"
+          "duration": 0
         }
       ],
-      "duration": 352.19
+      "duration": 0,
+      "readOnly": true
     }
   ]
 };

@@ -29,6 +29,7 @@
 .stories-button:hover:not(:disabled){filter:brightness(1.09);}
 .stories-view button:focus-visible,.stories-view a:focus-visible,.stories-view input:focus-visible,.stories-view select:focus-visible,.stories-view summary:focus-visible{outline:2px solid var(--gold-soft);outline-offset:4px;}
 .stories-resume{margin-top:16px;padding:18px;border-radius:15px;border:1px solid var(--line);background:var(--panel);}
+.stories-view [hidden]{display:none!important;}
 .stories-resume[hidden]{display:none;}
 .stories-resume-head{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.82rem;margin-bottom:9px;}
 .stories-resume-head span{color:var(--muted);font-size:.72rem;}
@@ -85,7 +86,7 @@
 .stories-jump>span{position:relative;top:2px;}
 .stories-play{width:51px;height:51px;background:linear-gradient(140deg,#edd19a,#c7994e);color:#112720;border:0;}
 .stories-play svg{width:23px;height:23px;}
-.stories-player-footer{display:flex;align-items:center;justify-content:space-between;gap:9px;font-size:.66rem;margin-top:8px;color:var(--muted);}
+.stories-player-footer{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap;font-size:.66rem;margin-top:8px;color:var(--muted);}
 .stories-speed{display:flex;align-items:center;gap:6px;}
 .stories-speed select{font:inherit;color:var(--cream);background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:5px 8px;direction:ltr;}
 .stories-status{font-size:.69rem;color:var(--gold-soft);line-height:1.5;min-height:1.05em;}
@@ -97,3 +98,4 @@
 @media(min-width:720px){.stories-feature{min-height:440px;}.stories-feature-body{padding-top:165px;}.stories-scene{min-height:340px;}.stories-scene-title{padding-top:205px;}.stories-transcript{font-size:1.1rem;}}
 @media(max-width:380px){.section-overlay .stories-content{padding-left:14px;padding-right:14px;}.stories-feature-body{padding-left:20px;padding-right:20px;}.stories-player{padding-left:14px;padding-right:14px;}.stories-player-controls{gap:10px;}.stories-player-footer{align-items:flex-start;}.stories-player-heading>span{max-width:44%;text-align:left;}}
 @media(prefers-reduced-motion:reduce){.stories-reader-content{scroll-behavior:auto;}.stories-progress>span{transition:none;}}
+

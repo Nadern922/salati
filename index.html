@@ -2871,7 +2871,7 @@
       <header class="stories-intro">
         <span class="stories-kicker">حكايات تهدي القلب</span>
         <h1 id="storiesHeading">لكل قصة، أثر يبقى.</h1>
-        <p>قصص مستندة إلى القرآن، بسرد صوتي هادئ ومشاهد رمزية. استمع للفصول أو اقرأها على مهل.</p>
+        <p>قصص الأنبياء والقرآن بصوت الشيخ محمد بن علي الشنقيطي. استمع إلى التسجيلات الأصلية، واستكمل من حيث توقفت.</p>
       </header>
       <div id="storiesCatalog"></div>
     </div>
@@ -2880,7 +2880,7 @@
 <section class="section-overlay stories-view" id="storyReaderOverlay" role="dialog" aria-modal="true" aria-labelledby="storyReaderName">
   <div class="mushaf-top stories-top">
     <button class="mushaf-close" id="storyReaderClose" aria-label="الرجوع إلى مكتبة القصص">‹</button>
-    <div class="mushaf-page-info" id="storyReaderName">قصة آدم عليه السلام</div>
+    <div class="mushaf-page-info" id="storyReaderName">مكتبة القصص</div>
     <button class="stories-text-button" id="storyChaptersJump">الفصول</button>
   </div>
   <div class="stories-content stories-reader-content" id="storyReaderContent">
@@ -2896,8 +2896,8 @@
       <div class="stories-reader-sub"><strong id="storyChapterCount"></strong><span>مدة الفصل <b id="storyChapterDuration" dir="ltr"></b></span></div>
       <article class="stories-transcript" id="storyTranscript" aria-label="نص الفصل"></article>
       <aside class="stories-lesson"><h3>وقفة للتأمل</h3><p id="storyLesson"></p></aside>
-      <section class="stories-sources" aria-label="مصادر الفصل"><h3>من القرآن الكريم</h3><div class="stories-source-links" id="storySources"></div><p>النص سرد موجز لمعاني الآيات، والعبرة تأمل تربوي. الصور طبيعة رمزية دون تجسيد الأنبياء.</p></section>
-      <div class="stories-complete" id="storyComplete" hidden><p>أتممت القصة. تبقى العبرة: التواضع، والتعلّم، والرجوع إلى الله.</p><button class="stories-text-button" id="storyRestart">الاستماع من البداية</button></div>
+      <section class="stories-sources" aria-label="مصادر الفصل"><h3 id="storySourcesHeading">المصادر</h3><div class="stories-source-links" id="storySources"></div><p id="storySourcesNote"></p></section>
+      <div class="stories-complete" id="storyComplete" hidden><p>أتممت الاستماع. يمكنك العودة إلى المكتبة أو الاستماع من البداية.</p><button class="stories-text-button" id="storyRestart">الاستماع من البداية</button></div>
       <section class="stories-chapters" id="storyChaptersSection" aria-label="فصول القصة">
         <div class="stories-section-title"><h3>رحلة القصة</h3><span>بالترتيب من البداية</span></div>
         <div class="stories-chapter-list" id="storyChaptersList"></div>
@@ -2916,7 +2916,7 @@
         <button class="stories-icon-button stories-jump" id="storyForward" aria-label="تقديم 15 ثانية"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M23 9a11 11 0 10-2 16M23 4v6h-6"/></svg><span>15</span></button>
         <button class="stories-icon-button" id="storyNextChapter" aria-label="الفصل التالي"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 5h2v14h-2zM5 5l11 7-11 7z"/></svg></button>
       </div>
-      <div class="stories-player-footer"><label class="stories-speed" for="storySpeed">السرعة <select id="storySpeed"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select></label><span id="storyOverallProgress">٠٪ من القصة</span><span>سرد صوتي مولّد</span></div>
+      <div class="stories-player-footer"><label class="stories-speed" for="storySpeed">السرعة <select id="storySpeed"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select></label><span id="storyOverallProgress">٠٪ من القصة</span><span id="storyNarrator"></span></div>
       <p class="stories-status" id="storyPlayerStatus" role="status" aria-live="polite"></p>
     </div>
   </div>
@@ -6406,7 +6406,7 @@ document.getElementById('calendarClose').addEventListener('click', () => {
 });
 </script>
 
-<script src="stories/catalog.js"></script>
-<script src="js/stories.js"></script>
+<script src="stories/catalog.js?v=shanqiti-1"></script>
+<script src="js/stories.js?v=shanqiti-1"></script>
 </body>
 </html>

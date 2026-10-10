@@ -1,4 +1,4 @@
-/* Bundled story assets: no accounts, remote TTS calls or speech synthesis at runtime. */
+/* Original lecture recordings and a separate written story library. */
 (function(){
   'use strict';
   const STORAGE_KEY = 'salati_story_progress_v1';
@@ -40,11 +40,12 @@
   }
   function currentTime(){ return pendingSeek !== null ? pendingSeek : Math.max(0, audio.currentTime || 0); }
   function overallProgress(item, index, time){
+    if(!item.duration) return 0;
     const elapsed = item.chapters.slice(0,index).reduce((sum,chapter) => sum + chapter.duration,0) + time;
     return Math.min(100, Math.max(0, elapsed / item.duration * 100));
   }
   function saveProgress(force = false){
-    if(!story) return;
+    if(!story || story.readOnly) return;
     const time = Math.min(currentTime(), story.chapters[chapterIndex].duration);
     const second = Math.floor(time);
     if(!force && second === lastSavedSecond) return;
@@ -89,7 +90,7 @@
     if(typeof azanPreviewEl !== 'undefined' && azanPreviewEl) azanPreviewEl.pause();
   }
   async function play(){
-    if(!story) return;
+    if(!story || story.readOnly) return;
     if(completed){ loadChapter(0, {autoplay:true}); return; }
     const version = ++playbackVersion;
     pauseOtherAudio();
@@ -135,21 +136,21 @@
   }
   function renderLibrary(){
     el('storiesCatalog').innerHTML = catalog.map(item => {
-      const saved = readProgress(item);
+      const saved = item.readOnly ? null : readProgress(item);
       const continuing = saved && !saved.completed;
       const progress = saved ? (saved.completed ? 100 : overallProgress(item,saved.chapter,saved.time)) : 0;
       return `<article class="stories-catalog-item" data-story="${escape(item.id)}">
         <span class="stories-category">✦ ${escape(item.category)}</span>
         <div class="stories-feature">
-          <img src="${escape(item.cover)}" alt="مشهد طبيعي رمزي لنهر وأشجار عند الفجر" width="1536" height="1024" fetchpriority="high">
+          <img src="${escape(item.cover)}" alt="${escape(item.coverAlt || 'مشهد طبيعي رمزي لنهر وأشجار عند الفجر')}" width="1536" height="1024" loading="lazy">
           <div class="stories-feature-body">
-            <span class="stories-feature-tag">قصة البداية</span>
+            <span class="stories-feature-tag">${escape(item.readOnly ? 'قصة للقراءة' : 'بصوت '+item.narrator)}</span>
             <h2>${escape(item.title)}</h2>
             <p>${escape(item.description)}</p>
-            <div class="stories-meta"><span>${arabic.format(item.chapters.length)} فصول</span><span>${arabic.format(Math.ceil(item.duration/60))} دقائق</span><span>صوت وصورة ونص</span></div>
+            <div class="stories-meta"><span>${arabic.format(item.chapters.length)} ${item.readOnly ? 'فصول' : 'مقاطع'}</span>${item.readOnly ? '<span>قراءة ومشاهد رمزية</span>' : `<span>${arabic.format(Math.ceil(item.duration/60))} دقيقة</span><span>تسجيل أصلي</span>`}</div>
             <div class="stories-actions">
-              <button class="stories-button stories-button-primary" data-listen="${escape(item.id)}">${ICON_PLAY}${continuing ? 'استكمل الاستماع' : saved?.completed ? 'استمع مجددًا' : 'استمع للقصة'}</button>
-              <button class="stories-button stories-button-secondary" data-read="${escape(item.id)}">تصفّح الفصول</button>
+              ${item.readOnly ? '' : `<button class="stories-button stories-button-primary" data-listen="${escape(item.id)}">${ICON_PLAY}${continuing ? 'استكمل الاستماع' : saved?.completed ? 'استمع مجددًا' : 'استمع للقصة'}</button>`}
+              <button class="stories-button stories-button-secondary" data-read="${escape(item.id)}">${item.readOnly ? 'اقرأ القصة' : 'تصفّح المقاطع'}</button>
             </div>
           </div>
         </div>
@@ -168,7 +169,7 @@
     pause();
     story = item;
     lastWrittenProgress = null;
-    const saved = options.restart ? null : readProgress(item);
+    const saved = options.restart || item.readOnly ? null : readProgress(item);
     const index = saved && !saved.completed ? saved.chapter : 0;
     const time = saved && !saved.completed ? saved.time : 0;
     audio.playbackRate = saved?.rate || 1;
@@ -186,34 +187,41 @@
     pause();
     chapterIndex = index;
     completed = false;
-    pendingSeek = Math.max(0, Math.min(time, story.chapters[index].duration));
+    pendingSeek = story.readOnly ? null : Math.max(0, Math.min(time, story.chapters[index].duration));
     lastSavedSecond = -1;
     const rate = audio.playbackRate;
-    audio.src = story.chapters[index].audio;
+    if(story.readOnly) audio.removeAttribute('src');
+    else audio.src = story.chapters[index].audio;
     audio.load();
     audio.playbackRate = rate;
     renderChapter();
     saveProgress(true);
-    if(autoplay) play();
+    if(autoplay && !story.readOnly) play();
     else status('');
   }
   function renderChapter(){
     const chapter = story.chapters[chapterIndex];
+    reader.querySelector('.stories-player').hidden = !!story.readOnly;
+    el('storyNarrator').textContent = story.narrator ? 'بصوت '+story.narrator : '';
+    el('storyChapterDuration').parentElement.parentElement.hidden = !!story.readOnly;
+    el('storyLesson').parentElement.hidden = !chapter.lesson;
+    el('storySourcesHeading').textContent = story.readOnly ? 'من القرآن الكريم' : 'مصدر التسجيل';
+    el('storySourcesNote').textContent = story.readOnly ? 'النص سرد موجز لمعاني الآيات، والعبرة تأمل تربوي. الصور طبيعة رمزية دون تجسيد الأنبياء.' : 'تسجيل أصلي بصوت '+story.narrator+'. يمكنك فتح المصدر إذا تعذّر تشغيل الصوت هنا.';
     el('storySceneImage').src = chapter.image;
     el('storySceneImage').alt = chapter.imageAlt;
     el('storyChapterEyebrow').textContent = chapter.eyebrow;
     el('storyChapterTitle').textContent = chapter.title;
-    el('storyChapterCount').textContent = `الفصل ${arabic.format(chapterIndex+1)} من ${arabic.format(story.chapters.length)}`;
+    el('storyChapterCount').textContent = `${story.readOnly ? 'الفصل' : 'المقطع'} ${arabic.format(chapterIndex+1)} من ${arabic.format(story.chapters.length)}`;
     el('storyChapterDuration').textContent = clock(chapter.duration);
     el('storyTranscript').innerHTML = chapter.paragraphs.map(paragraph => `<p>${escape(paragraph)}</p>`).join('');
     el('storyLesson').textContent = chapter.lesson;
     el('storySources').innerHTML = chapter.sources.map(source => `<a href="${escape(source.url)}" target="_blank" rel="noopener noreferrer">${escape(source.label)} ↗</a>`).join('');
-    el('storyChaptersList').innerHTML = story.chapters.map((item,index) => `<button class="stories-chapter" data-chapter="${index}" aria-current="${index===chapterIndex}" aria-label="الفصل ${index+1}: ${escape(item.title)}"><span class="stories-chapter-number">${index===chapterIndex ? '◉' : arabic.format(index+1)}</span><span class="stories-chapter-name">${escape(item.title)}</span><span class="stories-chapter-duration">${clock(item.duration)}</span></button>`).join('');
+    el('storyChaptersList').innerHTML = story.chapters.map((item,index) => `<button class="stories-chapter" data-chapter="${index}" aria-current="${index===chapterIndex}" aria-label="${story.readOnly ? 'الفصل' : 'المقطع'} ${index+1}: ${escape(item.title)}"><span class="stories-chapter-number">${index===chapterIndex ? '◉' : arabic.format(index+1)}</span><span class="stories-chapter-name">${escape(item.title)}</span>${story.readOnly ? '' : `<span class="stories-chapter-duration">${clock(item.duration)}</span>`}</button>`).join('');
     el('storyComplete').hidden = true;
     el('storyPrevChapter').disabled = chapterIndex === 0;
     el('storyNextChapter').disabled = chapterIndex === story.chapters.length-1;
     el('storyPlayerChapter').textContent = chapter.title;
-    el('storyPlayerFraction').textContent = `الفصل ${arabic.format(chapterIndex+1)} / ${arabic.format(story.chapters.length)}`;
+    el('storyPlayerFraction').textContent = `المقطع ${arabic.format(chapterIndex+1)} / ${arabic.format(story.chapters.length)}`;
     el('storySeek').max = String(chapter.duration);
     el('storyReaderContent').scrollTop = 0;
     updateTime();
@@ -221,7 +229,7 @@
     updateMediaSession();
   }
   function seek(time){
-    if(!story || !Number.isFinite(time)) return;
+    if(!story || story.readOnly || !Number.isFinite(time)) return;
     const target = Math.max(0, Math.min(time, chapterDuration()));
     completed = false;
     el('storyComplete').hidden = true;
@@ -231,7 +239,7 @@
     saveProgress(true);
   }
   function updateTime(){
-    if(!story) return;
+    if(!story || story.readOnly) return;
     const time = currentTime();
     const duration = chapterDuration();
     el('storySeek').value = String(time);
@@ -246,7 +254,12 @@
   }
   function updateMediaSession(){
     if(!story || !('mediaSession' in navigator) || typeof MediaMetadata === 'undefined') return;
-    navigator.mediaSession.metadata = new MediaMetadata({title:story.chapters[chapterIndex].title,artist:'صلاتي · '+story.title,album:'قصص القرآن والأنبياء'});
+    if(story.readOnly){
+      navigator.mediaSession.metadata = null;
+      navigator.mediaSession.playbackState = 'none';
+      return;
+    }
+    navigator.mediaSession.metadata = new MediaMetadata({title:story.chapters[chapterIndex].title,artist:story.narrator || 'صلاتي',album:'قصص القرآن والأنبياء · '+story.title});
     navigator.mediaSession.playbackState = audio.paused ? 'paused' : 'playing';
     const handlers = {play, pause, seekbackward:()=>seek(currentTime()-15), seekforward:()=>seek(currentTime()+15),
       previoustrack:()=>loadChapter(chapterIndex-1,{autoplay:!audio.paused}), nexttrack:()=>loadChapter(chapterIndex+1,{autoplay:!audio.paused}),
@@ -320,3 +333,4 @@
   });
   window.SalatiStories = {openLibrary,closeLibrary,openStory,pause,isReaderOpen:()=>reader.classList.contains('open')};
 })();
+
