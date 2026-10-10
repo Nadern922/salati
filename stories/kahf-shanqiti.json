@@ -1,0 +1,36 @@
+{
+  "id": "kahf-shanqiti",
+  "title": "أهل الكهف",
+  "subtitle": "تسجيلات أصلية بصوت الشيخ محمد بن علي الشنقيطي",
+  "category": "قصص القرآن",
+  "description": "قصة أهل الكهف بصوت الشيخ محمد بن علي الشنقيطي، في تسجيل أصلي من محاضراته.",
+  "cover": "stories/images/forest.webp",
+  "coverAlt": "مشهد طبيعي رمزي دون تجسيد أشخاص",
+  "narrator": "الشيخ محمد بن علي الشنقيطي",
+  "narration": "تسجيلات أصلية بصوت الشيخ محمد بن علي الشنقيطي، من مكتبة الطريق إلى الله.",
+  "artNote": "مشاهد طبيعية رمزية، لا تصوّر الأنبياء أو الملائكة ولا تمثّل حقيقة الجنة.",
+  "methodology": "التسجيلات محاضرات منشورة بصوت الشيخ. الوصف المكتوب تعريف بالمقاطع، وليس تفريغًا لكلامه. رابط المصدر متاح لكل مقطع.",
+  "chapters": [
+    {
+      "id": "cave",
+      "title": "قصة أهل الكهف",
+      "eyebrow": "بصوت الشيخ محمد بن علي الشنقيطي",
+      "image": "stories/images/forest.webp",
+      "imageAlt": "مشهد طبيعي رمزي دون تجسيد أشخاص",
+      "paragraphs": [
+        "استمع إلى «قصة أهل الكهف» بصوت الشيخ محمد بن علي الشنقيطي.",
+        "يمكنك الانتقال بين المقاطع، وتغيير سرعة الاستماع، واستكمال التسجيل من موضع توقفك."
+      ],
+      "lesson": "",
+      "sources": [
+        {
+          "label": "التسجيل الأصلي · الطريق إلى الله",
+          "url": "https://way2allah.com/khotab-item-288393.htm"
+        }
+      ],
+      "duration": 3877.51,
+      "audio": "https://archive.org/download/media-way2allah-_3420/alshekh_mhmd_alshnkete_ksa_ahl_alkhf_wkef_kshfhm_ahl_alkrea_wma_alsr_alze_g3l_ahl_alkrea_eshkwn_bhm.mp3"
+    }
+  ],
+  "duration": 3877.51
+}

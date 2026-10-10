@@ -5,7 +5,7 @@
   "category": "قصص الأنبياء",
   "description": "رحلة هادئة في قصة بداية الإنسان، من الخلق والتكريم إلى التوبة والحياة على الأرض، كما جاءت في القرآن الكريم.",
   "cover": "stories/images/garden.webp",
-  "narration": "سرد عربي بصوت مولّد آليًا، مبني على معاني الآيات؛ وليس تلاوة قرآنية.",
+  "narration": "قصة مكتوبة للقراءة. التسجيل بصوت الشيخ محمد بن علي الشنقيطي غير متاح لهذه القصة حاليًا.",
   "artNote": "مشاهد طبيعية رمزية، لا تصوّر الأنبياء أو الملائكة ولا تمثّل حقيقة الجنة.",
   "methodology": "هذا سرد موجز لمعاني الآيات، وليس نقلًا حرفيًا للتفسير. لم نضف حوارات متخيّلة أو تفاصيل لم يذكرها القرآن، مثل نوع الشجرة أو مكان الهبوط. العبر تأملات تربوية مستفادة من القصة.",
   "chapters": [
@@ -30,8 +30,7 @@
           "url": "https://quran.com/15/26-29"
         }
       ],
-      "duration": 50.62,
-      "audio": "stories/audio/adam-beginning.mp3"
+      "duration": 0
     },
     {
       "id": "knowledge",
@@ -50,8 +49,7 @@
           "url": "https://quran.com/2/31-33"
         }
       ],
-      "duration": 45.7,
-      "audio": "stories/audio/adam-knowledge.mp3"
+      "duration": 0
     },
     {
       "id": "honor",
@@ -78,8 +76,7 @@
           "url": "https://quran.com/7/12-18"
         }
       ],
-      "duration": 51.22,
-      "audio": "stories/audio/adam-honor.mp3"
+      "duration": 0
     },
     {
       "id": "garden",
@@ -102,8 +99,7 @@
           "url": "https://quran.com/20/117-119"
         }
       ],
-      "duration": 48.62,
-      "audio": "stories/audio/adam-garden.mp3"
+      "duration": 0
     },
     {
       "id": "temptation",
@@ -126,8 +122,7 @@
           "url": "https://quran.com/20/120-121"
         }
       ],
-      "duration": 51.58,
-      "audio": "stories/audio/adam-temptation.mp3"
+      "duration": 0
     },
     {
       "id": "repentance",
@@ -154,8 +149,7 @@
           "url": "https://quran.com/20/122"
         }
       ],
-      "duration": 51.36,
-      "audio": "stories/audio/adam-repentance.mp3"
+      "duration": 0
     },
     {
       "id": "earth",
@@ -182,9 +176,9 @@
           "url": "https://quran.com/20/123-124"
         }
       ],
-      "duration": 53.09,
-      "audio": "stories/audio/adam-earth.mp3"
+      "duration": 0
     }
   ],
-  "duration": 352.19
+  "duration": 0,
+  "readOnly": true
 }

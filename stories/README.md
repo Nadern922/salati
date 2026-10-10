@@ -1,16 +1,18 @@
 # قصص القرآن والأنبياء
 
-The first published story is Adam: seven chapters of original Arabic prose based on the Quran passages linked in each chapter. Lessons are editorial reflections. Landscapes are symbolic illustrations, with no depictions of prophets or angels; the garden illustrations do not claim to portray Paradise.
+The audio library uses original recordings of Sheikh Muhammad bin Ali Al-Shanqiti: three Moses episodes, a lecture about Hud and the people of Ad, and the story of the People of the Cave. Each episode links to its source page on Way2Allah. Stable HTTPS Archive.org media links support streaming and seeking; playback requires internet access. The first Moses episode uses the original MP4 through the audio element, without displaying video. Written descriptions identify the recordings and are not transcripts of the Sheikh's words.
 
-Audio is synthetic Arabic narration (`ar-SA-HamedNeural`, rate `-8%`), not Quran recitation. All MP3 and WebP assets are bundled with the website and Android builds. Playback does not call a speech service. It requires loading the bundled file, then the audio player can seek and change speed. Progress is stored locally per device; clearing browser storage removes it.
+Adam remains a written story in seven chapters based on the linked Quran passages. It has no playable audio until a verified recording by the requested narrator is available. Existing synthetic MP3 assets are retained as historical files and are not referenced by the active catalog.
 
-`adam.json` is the editable source. `catalog.js` is a generated browser catalog. To regenerate narration and catalog, install `edge-tts` and FFmpeg/ffprobe, then run from the repository root:
+Landscape illustrations are symbolic, with no depictions of prophets or angels and no claim to portray Paradise. Progress and listening speed are saved locally on each device. Clearing browser storage removes saved progress.
+
+Each story has an editable JSON source in this directory. Rebuild `catalog.js` while preserving the current library order, then run the checks:
 
 ```sh
-python scripts/generate-story-audio.py stories/adam.json
+python scripts/generate-story-audio.py --catalog-only
 node --test tests/*.test.cjs
 ```
 
-Generation requires network access; app playback does not require this dependency. Review the prose and referenced Quran passages before publishing another story. Include actual narration, images, duration, source links and lessons for every chapter; do not publish placeholder play buttons.
+The legacy narration generator rejects original-recording and written-only stories. Never replace an original recording with generated speech while retaining the Sheikh's name. New audio entries need a verified narrator, a stable playable URL, duration, source page and a symbolic image.
 
-Browser verification used mobile widths 320/390 and desktop 1024, actual MP3 playback, seek/resume, speed retention, automatic next chapter, completion and browser back navigation. Serve with HTTP byte-range support (as GitHub Pages does) when testing audio seeking.
+Verification covered mobile navigation, saved progress, speed controls, written-only Adam, source links, and playback and seeking of the actual media files. All remote media URLs returned HTTP 206 byte ranges. Browser media tests used copies fetched with verified TLS because Chromium does not trust this environment's network proxy certificate.

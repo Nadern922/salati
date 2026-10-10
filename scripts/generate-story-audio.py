@@ -1,5 +1,6 @@
 """Generate bundled Arabic narration for an authored story (not part of app startup).
-Install edge-tts, then: python scripts/generate-story-audio.py stories/adam.json
+Legacy synthetic narration helper; not used for original recordings or written-only stories.
+Rebuild the browser catalog without generating audio: pass --catalog-only.
 The audio is synthetic narration of the story prose, not a Quran recitation.
 """
 import asyncio
@@ -10,16 +11,30 @@ import ssl
 import subprocess
 import sys
 
-import edge_tts
-from edge_tts import communicate
-
-# Respect the managed environment's CA trust and proxy; never disable TLS checks.
-communicate._SSL_CTX = ssl.create_default_context(cafile=os.environ.get('SSL_CERT_FILE'))
 ROOT = Path(__file__).resolve().parents[1]
 
+def write_catalog():
+    catalog_path = ROOT / 'stories/catalog.js'
+    current = json.loads(catalog_path.read_text().split('=', 1)[1].strip().rstrip(';'))
+    sources = {story['id']: story for path in sorted((ROOT / 'stories').glob('*.json'))
+        for story in [json.loads(path.read_text())]}
+    order = [story['id'] for story in current['stories'] if story['id'] in sources]
+    order += [story_id for story_id in sources if story_id not in order]
+    data = {'stories': [sources[story_id] for story_id in order]}
+    catalog_path.write_text('window.SALATI_STORIES = ' + json.dumps(data, ensure_ascii=False, indent=2) + ';\n')
+
 async def main():
+    if sys.argv[1] == '--catalog-only':
+        write_catalog()
+        return
     story_path = ROOT / sys.argv[1]
     story = json.loads(story_path.read_text())
+    if story.get('readOnly') or story.get('narrator'):
+        raise SystemExit('Original recordings and written-only stories must not receive synthetic narration.')
+    import edge_tts
+    from edge_tts import communicate
+    # Respect the managed environment's CA trust and proxy; never disable TLS checks.
+    communicate._SSL_CTX = ssl.create_default_context(cafile=os.environ.get('SSL_CERT_FILE'))
     semaphore = asyncio.Semaphore(2)
     async def generate(index, chapter):
         path = ROOT / 'stories/audio' / (story['id'] + '-' + chapter['id'] + '.mp3')
@@ -47,8 +62,7 @@ async def main():
     await asyncio.gather(*(generate(i, chapter) for i, chapter in enumerate(story['chapters'])))
     story['duration'] = round(sum(chapter['duration'] for chapter in story['chapters']), 2)
     story_path.write_text(json.dumps(story, ensure_ascii=False, indent=2) + '\n')
-    data = {'stories': [json.loads(path.read_text()) for path in sorted((ROOT / 'stories').glob('*.json'))]}
-    (ROOT / 'stories/catalog.js').write_text('window.SALATI_STORIES = ' + json.dumps(data, ensure_ascii=False, indent=2) + ';\n')
+    write_catalog()
     print('Narration and story catalog generated.', flush=True)
 
 if __name__ == '__main__':
