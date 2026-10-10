@@ -22,6 +22,7 @@
 <meta name="theme-color" content="#0d2b28">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="styles/stories.css">
 <style>
   :root{
     --night:#061513;
@@ -2588,6 +2589,11 @@
   </div>
   <div class="mushaf-content">
     <div class="settings-group">
+      <button class="more-row stories-tools-card" id="toolsStoriesBtn">
+        <span class="mr-icon">📖</span>
+        <span class="mr-label">قصص القرآن والأنبياء<small>قصص صوتية، مشاهد رمزية، وعبر للتأمل</small></span>
+        <span aria-hidden="true">‹</span>
+      </button>
       <button class="more-row" id="toolsCalendarBtn">
         <span class="mr-icon">🗓️</span>
         <span class="mr-label">التقويم</span>
@@ -2852,6 +2858,70 @@
     </button>
   </div>
 </div>
+
+<!-- Illustrated audio stories -->
+<section class="section-overlay stories-view" id="storiesOverlay" role="dialog" aria-modal="true" aria-labelledby="storiesHeading">
+  <div class="mushaf-top stories-top">
+    <button class="mushaf-close" id="storiesClose" aria-label="الرجوع إلى أدوات إسلامية">‹</button>
+    <div class="mushaf-page-info">قصص القرآن والأنبياء<small>استمع، تأمل، وتعلّم</small></div>
+    <svg class="stories-mark" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M16 8c-4-3-8-3-12-2v19c4-1 8-1 12 2 4-3 8-3 12-2V6c-4-1-8-1-12 2Z"/><path d="M16 8v19M8 11l5 1M8 16l5 1M20 12l4-1M20 17l4-1"/></svg>
+  </div>
+  <div class="stories-content">
+    <div class="stories-shell">
+      <header class="stories-intro">
+        <span class="stories-kicker">حكايات تهدي القلب</span>
+        <h1 id="storiesHeading">لكل قصة، أثر يبقى.</h1>
+        <p>قصص مستندة إلى القرآن، بسرد صوتي هادئ ومشاهد رمزية. استمع للفصول أو اقرأها على مهل.</p>
+      </header>
+      <div id="storiesCatalog"></div>
+    </div>
+  </div>
+</section>
+<section class="section-overlay stories-view" id="storyReaderOverlay" role="dialog" aria-modal="true" aria-labelledby="storyReaderName">
+  <div class="mushaf-top stories-top">
+    <button class="mushaf-close" id="storyReaderClose" aria-label="الرجوع إلى مكتبة القصص">‹</button>
+    <div class="mushaf-page-info" id="storyReaderName">قصة آدم عليه السلام</div>
+    <button class="stories-text-button" id="storyChaptersJump">الفصول</button>
+  </div>
+  <div class="stories-content stories-reader-content" id="storyReaderContent">
+    <div class="stories-shell">
+      <figure class="stories-scene">
+        <img id="storySceneImage" alt="مشهد طبيعي رمزي" width="1536" height="1024">
+        <span class="stories-scene-label">مشهد رمزي</span>
+        <figcaption class="stories-scene-title">
+          <p id="storyChapterEyebrow"></p>
+          <h2 id="storyChapterTitle"></h2>
+        </figcaption>
+      </figure>
+      <div class="stories-reader-sub"><strong id="storyChapterCount"></strong><span>مدة الفصل <b id="storyChapterDuration" dir="ltr"></b></span></div>
+      <article class="stories-transcript" id="storyTranscript" aria-label="نص الفصل"></article>
+      <aside class="stories-lesson"><h3>وقفة للتأمل</h3><p id="storyLesson"></p></aside>
+      <section class="stories-sources" aria-label="مصادر الفصل"><h3>من القرآن الكريم</h3><div class="stories-source-links" id="storySources"></div><p>النص سرد موجز لمعاني الآيات، والعبرة تأمل تربوي. الصور طبيعة رمزية دون تجسيد الأنبياء.</p></section>
+      <div class="stories-complete" id="storyComplete" hidden><p>أتممت القصة. تبقى العبرة: التواضع، والتعلّم، والرجوع إلى الله.</p><button class="stories-text-button" id="storyRestart">الاستماع من البداية</button></div>
+      <section class="stories-chapters" id="storyChaptersSection" aria-label="فصول القصة">
+        <div class="stories-section-title"><h3>رحلة القصة</h3><span>بالترتيب من البداية</span></div>
+        <div class="stories-chapter-list" id="storyChaptersList"></div>
+      </section>
+    </div>
+  </div>
+  <div class="stories-player" role="region" aria-label="مشغّل السرد الصوتي">
+    <div class="stories-player-inner">
+      <div class="stories-player-heading"><b id="storyPlayerChapter"></b><span id="storyPlayerFraction"></span></div>
+      <input class="stories-seek" id="storySeek" type="range" min="0" max="1" value="0" step="0.1" aria-label="موضع الاستماع داخل الفصل">
+      <div class="stories-time-row"><time id="storyElapsed">0:00</time><time id="storyDuration">0:00</time></div>
+      <div class="stories-player-controls">
+        <button class="stories-icon-button" id="storyPrevChapter" aria-label="الفصل السابق"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 5h2v14H5zm14 0v14L8 12z"/></svg></button>
+        <button class="stories-icon-button stories-jump" id="storyRewind" aria-label="إرجاع 15 ثانية"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 9a11 11 0 112 16M9 4v6h6"/></svg><span>15</span></button>
+        <button class="stories-icon-button stories-play" id="storyPlay" aria-label="تشغيل السرد الصوتي" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
+        <button class="stories-icon-button stories-jump" id="storyForward" aria-label="تقديم 15 ثانية"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M23 9a11 11 0 10-2 16M23 4v6h-6"/></svg><span>15</span></button>
+        <button class="stories-icon-button" id="storyNextChapter" aria-label="الفصل التالي"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 5h2v14h-2zM5 5l11 7-11 7z"/></svg></button>
+      </div>
+      <div class="stories-player-footer"><label class="stories-speed" for="storySpeed">السرعة <select id="storySpeed"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select></label><span id="storyOverallProgress">٠٪ من القصة</span><span>سرد صوتي مولّد</span></div>
+      <p class="stories-status" id="storyPlayerStatus" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+  <audio id="storyAudio" preload="metadata"></audio>
+</section>
 
 <script src="js/adhan-background.js"></script>
 <script>
@@ -3195,6 +3265,7 @@ function setActiveNav(btn){
 }
 
 function closeAllOverlays(){
+  window.SalatiStories?.pause();
   quranOverlay.classList.remove('open');
   azkarOverlay.classList.remove('open');
   settingsOverlay.classList.remove('open');
@@ -3205,7 +3276,7 @@ function closeAllOverlays(){
   if(streakOv) streakOv.classList.remove('open');
   const qiblaArOv = document.getElementById('qiblaArOverlay');
   if(qiblaArOv) qiblaArOv.classList.remove('open');
-  ['zakatOverlay','namesOverlay','travelOverlay','converterOverlay','cityOverlay','moreOverlay','statsOverlay','tafsirOverlay','azanVoicesOverlay','islamicToolsOverlay'].forEach(id=>{
+  ['zakatOverlay','namesOverlay','travelOverlay','converterOverlay','cityOverlay','moreOverlay','statsOverlay','tafsirOverlay','azanVoicesOverlay','islamicToolsOverlay','storiesOverlay','storyReaderOverlay'].forEach(id=>{
     const ov = document.getElementById(id);
     if(ov) ov.classList.remove('open');
   });
@@ -3223,10 +3294,10 @@ tabSabah.style.display='';tabMasaa.style.display='';
             الحل: عند فتح أي قسم رئيسي نضيف حالة جديدة إلى history، وعند الرجوع (popstate) نغلق
                القسم المفتوح بدل السماح للمتصفح بالخروج من التطبيق. */
   (function(){
-    (function(){window.__salatiPreBackState=null;window.addEventListener('popstate',function(){var st=null;if(document.getElementById('namesOverlay')?.classList.contains('open')){st={type:'names',returnState:namesReturnState};}else if(typeof azkarOverlay!=='undefined'&&azkarOverlay&&azkarOverlay.classList.contains('open')&&typeof azkarOpenMode!=='undefined'&&azkarOpenMode){st={type:'azkar'};}else{var salatiToolIds=['zakatOverlay','converterOverlay','azanVoicesOverlay','calendarOverlay'];for(var si=0;si<salatiToolIds.length;si++){var sEl=document.getElementById(salatiToolIds[si]);if(sEl&&sEl.classList.contains('open')){st={type:'tool'};if(salatiToolIds[si]==='azanVoicesOverlay'&&typeof azanPreviewEl!=='undefined'&&azanPreviewEl)azanPreviewEl.pause();break;}}}window.__salatiPreBackState=st;});})();const SALATI_SECTION_IDS = ['quranOverlay','searchOverlay','azkarOverlay','calendarOverlay',
+    (function(){window.__salatiPreBackState=null;window.addEventListener('popstate',function(){var st=null;if(document.getElementById('storyReaderOverlay')?.classList.contains('open')){st={type:'storyReader'};}else if(document.getElementById('storiesOverlay')?.classList.contains('open')){st={type:'storyLibrary'};}else if(document.getElementById('namesOverlay')?.classList.contains('open')){st={type:'names',returnState:namesReturnState};}else if(typeof azkarOverlay!=='undefined'&&azkarOverlay&&azkarOverlay.classList.contains('open')&&typeof azkarOpenMode!=='undefined'&&azkarOpenMode){st={type:'azkar'};}else{var salatiToolIds=['zakatOverlay','converterOverlay','azanVoicesOverlay','calendarOverlay'];for(var si=0;si<salatiToolIds.length;si++){var sEl=document.getElementById(salatiToolIds[si]);if(sEl&&sEl.classList.contains('open')){st={type:'tool'};if(salatiToolIds[si]==='azanVoicesOverlay'&&typeof azanPreviewEl!=='undefined'&&azanPreviewEl)azanPreviewEl.pause();break;}}}window.__salatiPreBackState=st;});})();const SALATI_SECTION_IDS = ['quranOverlay','searchOverlay','azkarOverlay','calendarOverlay',
                                 'qiblaArOverlay','streakOverlay','settingsOverlay','zakatOverlay','namesOverlay','travelOverlay',
                                 'converterOverlay','islamicToolsOverlay','azanVoicesOverlay','cityOverlay','moreOverlay',
-                                'statsOverlay','tafsirOverlay','mushafOverlay'];
+                                'statsOverlay','tafsirOverlay','mushafOverlay','storiesOverlay','storyReaderOverlay'];
     let salatiSectionOpen = false;
     
     function salatiAnySectionOpen(){
@@ -3261,7 +3332,7 @@ tabSabah.style.display='';tabMasaa.style.display='';
     });
   })();
   
-  (function(){function bindCapacitorBackButton(){if(window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.App){Capacitor.Plugins.App.addListener('backButton',function(ev){if(ev&&ev.canGoBack){window.history.back();}else{Capacitor.Plugins.App.exitApp();}});return true;}return false;}if(!bindCapacitorBackButton()){document.addEventListener('deviceready',bindCapacitorBackButton);}})();(function(){window.addEventListener('popstate',function(){var st=window.__salatiPreBackState;window.__salatiPreBackState=null;if(!st)return;if(st.type==='names'){restoreNamesReturn(st.returnState);}else if(st.type==='azkar'&&typeof openAzkarOverlay==='function'){openAzkarOverlay();}else if(st.type==='tool'&&typeof openIslamicToolsOverlay==='function'){openIslamicToolsOverlay();}});})();function openQuranOverlay(){
+  (function(){function bindCapacitorBackButton(){if(window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.App){Capacitor.Plugins.App.addListener('backButton',function(ev){if(ev&&ev.canGoBack){window.history.back();}else{Capacitor.Plugins.App.exitApp();}});return true;}return false;}if(!bindCapacitorBackButton()){document.addEventListener('deviceready',bindCapacitorBackButton);}})();(function(){window.addEventListener('popstate',function(){var st=window.__salatiPreBackState;window.__salatiPreBackState=null;if(!st)return;if(st.type==='storyReader'){window.SalatiStories?.openLibrary(true);}else if(st.type==='storyLibrary'){window.SalatiStories?.closeLibrary();}else if(st.type==='names'){restoreNamesReturn(st.returnState);}else if(st.type==='azkar'&&typeof openAzkarOverlay==='function'){openAzkarOverlay();}else if(st.type==='tool'&&typeof openIslamicToolsOverlay==='function'){openIslamicToolsOverlay();}});})();function openQuranOverlay(){
   closeAllOverlays();
   quranOverlay.classList.add('open');
   quranOverlay.classList.remove('khatma-mode');
@@ -3464,6 +3535,7 @@ function getSelectedAzanUrl(){
 }
 let realAzanEl = null;
 function playRealAzan(){
+  window.SalatiStories?.pause();
   try{
     realAzanEl = new Audio(getSelectedAzanUrl());
     realAzanEl.preload = 'auto';
@@ -6334,5 +6406,7 @@ document.getElementById('calendarClose').addEventListener('click', () => {
 });
 </script>
 
+<script src="stories/catalog.js"></script>
+<script src="js/stories.js"></script>
 </body>
 </html>

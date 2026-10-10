@@ -4,6 +4,8 @@ on:
     paths:
       - 'index.html'
       - 'js/**'
+      - 'stories/**'
+      - 'styles/**'
       - 'native/**'
       - 'scripts/**'
       - 'tests/**'
@@ -31,7 +33,7 @@ jobs:
           npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/app
           mkdir -p www
           cp index.html manifest.json privacy.html icon-192.png icon-512.png icon-maskable-512.png www/
-          cp -R audio js www/
+          cp -R audio js stories styles www/
           npx cap init "صلاتي" "com.nadern922.salati" --web-dir=www
           npx cap add android
           python3 scripts/install-android-adhan.py
