@@ -4,12 +4,27 @@
   if(!frame) return;
   const primary=document.getElementById('mushafText');
   const inner=primary.closest('.mushaf-page-inner');
+  function makeScan(innerEl,textEl){
+    const img=document.createElement('img');
+    img.className='mushaf-scan-page'; img.alt='صفحة من المصحف الشريف';
+    img.decoding='async'; img.loading='eager';
+    img.onerror=()=>{img.style.display='none';textEl.style.display='block'};
+    img.onload=()=>{textEl.style.display='none'};
+    innerEl.insertBefore(img,textEl); textEl.style.display='none'; return img;
+  }
+  const primaryScan=makeScan(inner,primary);
   const secondaryPage=document.createElement('div');
   secondaryPage.className='mushaf-page-inner';
   secondaryPage.innerHTML='<div class="mushaf-text" id="mushafTextNext"></div><span class="mushaf-leaf-number" id="mushafLeafNext"></span>';
   const gutter=document.createElement('div'); gutter.className='mushaf-spread-gutter'; gutter.setAttribute('aria-hidden','true');
   inner.insertAdjacentElement('afterend',gutter); gutter.insertAdjacentElement('afterend',secondaryPage);
   const secondary=secondaryPage.querySelector('#mushafTextNext');
+  const secondaryScan=makeScan(secondaryPage,secondary);
+  const scanUrl=p=>'https://www.mp3quran.net/api/quran_pages_svg/'+String(p).padStart(3,'0')+'.svg';
+  function showScan(img,textEl,page){
+    textEl.style.display='none'; img.style.display='block';
+    img.alt='صفحة '+page+' من المصحف الشريف'; img.src=scanUrl(page);
+  }
   const oldPrev=document.getElementById('mushafPrevBtn'), oldNext=document.getElementById('mushafNextBtn');
   const prev=oldPrev.cloneNode(true), next=oldNext.cloneNode(true);
   oldPrev.replaceWith(prev); oldNext.replaceWith(next);
@@ -45,6 +60,7 @@
     mushafCurrentPage=p; mushafPageInput.value=p;
     prev.disabled=p<=1; next.disabled=p>=(wide()?MUSHAF_MAX_PAGE-1:MUSHAF_MAX_PAGE);
     primary.innerHTML=''; secondary.innerHTML='';
+    showScan(primaryScan,primary,p); secondaryScan.style.display='none';
     mushafLoading.textContent='جارٍ تحميل الصفحة...';mushafLoading.style.display='block';
     document.getElementById('mushafContent').scrollTop=0;
     inner.scrollTop=0;secondaryPage.scrollTop=0;
@@ -56,7 +72,11 @@
       inner.querySelector('.mushaf-leaf-number')?.remove();
       const num=document.createElement('span');num.className='mushaf-leaf-number';num.textContent=''+p;inner.appendChild(num);
       secondary.style.display=second?'':'none';gutter.style.display=second?'':'none';
-      if(second){secondary.innerHTML=markup(second.data);wire(secondary);document.getElementById('mushafLeafNext').textContent=''+(p+1)}
+      if(second){
+        secondary.innerHTML=markup(second.data);wire(secondary);
+        showScan(secondaryScan,secondary,p+1);
+        document.getElementById('mushafLeafNext').textContent=''+(p+1);
+      }
       const a=first.data.ayahs[0], name=a?.surah?.name;
       mushafPageInfo.textContent=name?'سورة '+name:'المصحف الشريف';
       const juz=a?.juz||'';
