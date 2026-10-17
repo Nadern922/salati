@@ -93,17 +93,3 @@
   .mushaf-scan-page{width:100%;height:auto;max-height:100%;object-fit:contain}
   .mushaf-page-inner + .mushaf-page-inner,.mushaf-spread-gutter{display:none}
 }
-
-/* Keep the two scanned leaves together as one open book */
-.mushaf-page-frame{
-  width:100%; max-width:100%; align-items:stretch; justify-content:center;
-}
-.mushaf-page-inner{
-  flex:0 1 auto; width:auto; min-width:0; max-width:calc(50vw - 16px);
-}
-.mushaf-page-inner + .mushaf-page-inner{border:0}
-.mushaf-scan-page{flex:0 1 auto}
-.mushaf-spread-gutter{flex:0 0 10px}
-@media(max-width:720px){
-  .mushaf-page-inner{width:100%;max-width:100%;flex:1 1 100%}
-}
