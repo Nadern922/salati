@@ -28,7 +28,7 @@
     let html='',last=null;
     data.ayahs.forEach(a=>{
       if(a.surah.name!==last){html+='<div class="mushaf-surah-header">سورة '+a.surah.name+'</div>';last=a.surah.name}
-      html+='<span class="ayah-block" data-ayah="'+a.number+'" data-surah="'+a.surah.name+'" data-surah-num="'+a.surah.number+'" data-in-surah="'+a.numberInSurah+'">'+a.text+' <span class="mushaf-ayah-num">'+a.numberInSurah+'</span><span class="mushaf-tafsir-toggle" title="عرض التفسير">ت</span><span class="mushaf-tafsir-box"></span></span> ';
+      html+='<span class="ayah-block" data-page="'+(data.number||p)+'" data-ayah="'+a.number+'" data-surah="'+a.surah.name+'" data-surah-num="'+a.surah.number+'" data-in-surah="'+a.numberInSurah+'">'+a.text+' <span class="mushaf-ayah-num">'+a.numberInSurah+'</span><span class="mushaf-tafsir-toggle" title="عرض التفسير">ت</span><span class="mushaf-tafsir-box"></span></span> ';
     });
     return html;
   }
@@ -41,6 +41,7 @@
     let p=requested;
     if(wide() && requested===mushafCurrentPage+1) p=Math.min(MUSHAF_MAX_PAGE,mushafCurrentPage+2);
     else if(wide() && requested===mushafCurrentPage-1) p=Math.max(1,mushafCurrentPage-2);
+    if(wide() && p%2===0) p=Math.max(1,p-1);
     mushafCurrentPage=p; mushafPageInput.value=p;
     prev.disabled=p<=1; next.disabled=p>=(wide()?MUSHAF_MAX_PAGE-1:MUSHAF_MAX_PAGE);
     primary.innerHTML=''; secondary.innerHTML='';
@@ -49,7 +50,8 @@
     inner.scrollTop=0;secondaryPage.scrollTop=0;
     try{
       const first=await fetchPage(p);
-      const second=wide()&&p<MUSHAF_MAX_PAGE?await fetchPage(p+1):null;
+      let second=null;
+      if(wide()&&p<MUSHAF_MAX_PAGE){try{second=await fetchPage(p+1)}catch(e){second=null}}
       primary.innerHTML=markup(first.data);wire(primary);
       inner.querySelector('.mushaf-leaf-number')?.remove();
       const num=document.createElement('span');num.className='mushaf-leaf-number';num.textContent=''+p;inner.appendChild(num);
@@ -67,10 +69,20 @@
       if(typeof renderKhatma==='function')renderKhatma();
       if(typeof logStreakActivity==='function')logStreakActivity();
       applyBookmarkHighlight(scrollToBookmark);
+      secondary.querySelectorAll('.ayah-block.bookmarked').forEach(el=>el.classList.remove('bookmarked'));
+      const mark=getBookmark();
+      const target=mark&&secondary.querySelector('.ayah-block[data-ayah="'+mark.global+'"]');
+      if(target){target.classList.add('bookmarked');if(scrollToBookmark)target.scrollIntoView({behavior:'smooth',block:'center'})}
     }catch(e){
       mushafLoading.textContent='تعذّر تحميل الصفحة. تحقق من الاتصال أو افتح الصفحات مرة واحدة لحفظها للعمل دون إنترنت.';
       mushafLoading.style.display='block';
     }
+  };
+  window.toggleAyahBookmark=function(block){
+    if(!block)return;
+    const global=parseInt(block.dataset.ayah,10), current=getBookmark();
+    if(current&&current.global===global){clearBookmark();applyBookmarkHighlight();showMushafToast('تم إلغاء علامة التوقف')}
+    else {setBookmark({global,page:parseInt(block.dataset.page,10)||mushafCurrentPage,surah:block.dataset.surah,inSurah:block.dataset.inSurah});applyBookmarkHighlight();showMushafToast('🔖 تم حفظ موضعك: سورة '+block.dataset.surah+' - آية '+block.dataset.inSurah)}
   };
   prev.addEventListener('click',()=>loadMushafPage(mushafCurrentPage-(wide()?2:1)));
   next.addEventListener('click',()=>loadMushafPage(mushafCurrentPage+(wide()?2:1)));
