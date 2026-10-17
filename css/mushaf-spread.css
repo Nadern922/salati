@@ -67,3 +67,29 @@
   .mushaf-page-inner + .mushaf-page-inner,.mushaf-spread-gutter{display:none}
   .mushaf-page-inner .mushaf-text{font-size:clamp(21px,5.4vw,28px);line-height:2}
 }
+
+/* Use the printed page artwork, matching the referenced reader */
+.mushaf-page-frame{width:min(100%,1320px);gap:0;align-items:stretch;justify-content:center}
+.mushaf-page-inner{
+  flex:0 1 50%; display:flex; align-items:center; justify-content:center; padding:0;
+  overflow:hidden; background:transparent; border:0; outline:0; box-shadow:none;
+}
+.mushaf-page-inner:first-child,.mushaf-page-inner:last-child{border:0}
+.mushaf-page-inner:before,.mushaf-page-inner:after{display:none}
+.mushaf-page-inner .mushaf-text{display:none}
+.mushaf-scan-page{
+  display:block; width:auto; height:100%; max-width:100%; max-height:100%;
+  object-fit:contain; object-position:center; background:#fff; box-shadow:0 7px 22px rgba(0,0,0,.32);
+}
+.mushaf-spread-gutter{
+  flex:0 0 10px; margin:0 3px;
+  background:linear-gradient(90deg,#5c4932,#d9c79c 35%,#f7f2df 52%,#997b4b);
+  box-shadow:0 0 12px rgba(0,0,0,.3)
+}
+.mushaf-leaf-number{bottom:8px; z-index:4}
+@media(max-width:720px){
+  .mushaf-page-frame{width:100%;max-width:560px}
+  .mushaf-page-inner{flex:1 1 100%;padding:0}
+  .mushaf-scan-page{width:100%;height:auto;max-height:100%;object-fit:contain}
+  .mushaf-page-inner + .mushaf-page-inner,.mushaf-spread-gutter{display:none}
+}
